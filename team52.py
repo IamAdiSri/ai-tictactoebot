@@ -69,8 +69,8 @@ class Random_Player():
 					if board.board_status[cell[0]][cell[1]]=='-':
 						board.update(old_move,cell,flag)
 						bt = max( bt,self.minimax(board, depth+1, (isMax+1)%2, fl ,cell))
-						#print "KKKKKKK"
-						board.update1(old_move,cell,'-')
+						print "Max"
+						board.revert(cell,'-')
 			ans = bt
 		else:
 			bt = 100000 
@@ -78,8 +78,8 @@ class Random_Player():
 					if board.board_status[cell[0]][cell[1]]=='-':
 						board.update(old_move,cell,flag)
 						bt = min( bt,self.minimax(board, depth+1, (isMax+1)%2,fl,cell))
-						#print "OOOOOO"
-						board.update1(old_move,cell,'-')
+						print "Min"
+						board.revert(cell,'-')
 			ans = bt
 		return ans
 
@@ -231,12 +231,9 @@ class Board:
 		self.block_status[x][y] = 'd'
 		return 'SUCCESSFUL'
 
-	def update1(self, old_move, new_move, ply):
+	def revert(self,  new_move, ply):
 		#updating the game board and block status as per the move that has been passed in the arguements
-		if(self.check_valid_move(old_move, new_move)) == False:
-			return 'UNSUCCESSFUL'
 		self.board_status[new_move[0]][new_move[1]] = ply
-
 		x = new_move[0]/4
 		y = new_move[1]/4
 		fl = 0
