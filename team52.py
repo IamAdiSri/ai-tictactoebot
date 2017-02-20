@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import sys
 import random
 import signal
@@ -11,75 +12,76 @@ def handler(signum, frame):
 	#print 'Signal handler called with signal', signum
 	raise TimedOutExc()
 
-class Player52():
+class Random_Player():
 	def __init__(self):
 		pass
 
 	def move(self, board, old_move, flag):
 		#You have to implement the move function with the same signature as this
 		#Find the list of valid cells allowed
-		print "helllo"
+		#print "helllo"
 		maxval = -10000
 		bm = []
 		allowed_block = [old_move[0]%4, old_move[1]%4]
 		cells = board.find_valid_move_cells(old_move)
 		for cell in cells:
-			print cell
-		for cell in cells:
-			print cell
 			board.board_status[cell[0]][cell[1]] = flag
 			if flag=='x':
 				fl = 'o'
 			else:
 				fl = 'x'
-			val = minimax(board,0,0,allowed_block, fl)
+			al_bl = [cell[0]%4, cell[1]%4]
+			board.update(old_move,cell,flag)
+
+			val = self.minimax(board,0,0, fl,cell)
+			#print val
 			board.board_status[cell[0]][cell[1]] = '-'
+
 			if val > maxval:
 				maxval = val
-				bm[0] = cell[0]
-				bm[1] = cell[1]	
-		
-		#print
+				bm = cell	
+
+		print bm
 		return bm
-	
-	def minimax(self, board, depth, isMax, allowed_block, flag):
+
+	def minimax(self, board, depth, isMax, flag,old_move):
 		#to check for the best optimal move
 		bt = 0
 		k = board.find_terminal_state()
-		print k
+		#print k
+		if depth==20 :
+			board.print_board()
 		if flag=='x':
 			fl = 'o'
 		else:
 			fl = 'x'
-
-		if k[1]=="WON":
+		if k[1]=="WON" and isMax==0:
+			return -10
+		elif k[1]=="WON" and isMax==1:
 			return 10
 		elif k[1]=="DRAW":
 			return 0
-		elif k[1]=="LOST":
-			return -10
-		
+		cells = board.find_valid_move_cells(old_move)
+
 		if isMax:	
 			bt = -100000
-			for i in range(4*allowed_block[0], 4*allowed_block[0]+4):
-				for j in range(4*allowed_block[1], 4*allowed_block[1]+4):
-					if board.board_status[i][j]=='-':
-						board.board_status[i][j] = flag				
-						al_bl = [i%4, j%4]
-						bt = max( bt,minimax(board, depth+1, (isMax+1)%2, al_bl, fl ))
-						board.board_status[i][j] = '-'
-        	return bt
-
-		#else:
-		bt = 100000 
-		for i in range(4*allowed_block[0], 4*allowed_block[0]+4):
-			for j in range(4*allowed_block[1], 4*allowed_block[1]+4):
-				if board.board_status[i][j]=='-':
-					board.board_status[i][j] = flag
-					al_bl = [i%4, j%4]
-					bt = min( bt,minimax(board, depth+1, (isMax+1)%2, al_bl,fl))
-					board.board_status[i][j] = '_';
-		return bt
+			for cell in cells:
+					if board.board_status[cell[0]][cell[1]]=='-':
+						board.update(old_move,cell,flag)
+						bt = max( bt,self.minimax(board, depth+1, (isMax+1)%2, fl ,cell))
+						#print "KKKKKKK"
+						board.update1(old_move,cell,'-')
+			ans = bt
+		else:
+			bt = 100000 
+			for cell in cells:
+					if board.board_status[cell[0]][cell[1]]=='-':
+						board.update(old_move,cell,flag)
+						bt = min( bt,self.minimax(board, depth+1, (isMax+1)%2,fl,cell))
+						#print "OOOOOO"
+						board.update1(old_move,cell,'-')
+			ans = bt
+		return ans
 
 
 class Manual_Player:
@@ -198,15 +200,19 @@ class Board:
 		y = new_move[1]/4
 		fl = 0
 		bs = self.board_status
+		#print "yo"
 		#checking if a block has been won or drawn or not after the current move
 		for i in range(4):
 			#checking for horizontal pattern(i'th row)
 			if (bs[4*x+i][4*y] == bs[4*x+i][4*y+1] == bs[4*x+i][4*y+2] == bs[4*x+i][4*y+3]) and (bs[4*x+i][4*y] == ply):
 				self.block_status[x][y] = ply
+				#self.print_board()
 				return 'SUCCESSFUL'
 			#checking for vertical pattern(i'th column)
 			if (bs[4*x][4*y+i] == bs[4*x+1][4*y+i] == bs[4*x+2][4*y+i] == bs[4*x+3][4*y+i]) and (bs[4*x][4*y+i] == ply):
 				self.block_status[x][y] = ply
+				#self.print_board()
+
 				return 'SUCCESSFUL'
 
 		#checking for diagnol pattern
@@ -224,6 +230,22 @@ class Board:
 					return 'SUCCESSFUL'
 		self.block_status[x][y] = 'd'
 		return 'SUCCESSFUL'
+
+	def update1(self, old_move, new_move, ply):
+		#updating the game board and block status as per the move that has been passed in the arguements
+		if(self.check_valid_move(old_move, new_move)) == False:
+			return 'UNSUCCESSFUL'
+		self.board_status[new_move[0]][new_move[1]] = ply
+
+		x = new_move[0]/4
+		y = new_move[1]/4
+		fl = 0
+		bs = self.board_status
+		self.block_status[x][y]=ply
+		return "SUCCESSFUL"
+		#print "yo"
+		#checking if a block has been won or drawn or not after the current move
+		
 
 def gameplay(obj1, obj2):				#game simulator
 
@@ -367,17 +389,12 @@ if __name__ == '__main__':
 	obj2 = ''
 	option = sys.argv[1]	
 	if option == '1':
-		obj1 = Player52()
-		obj2 = Player52()
+		obj1 = Random_Player()
+		obj2 = Random_Player()
 
 	elif option == '2':
-<<<<<<< HEAD
 		obj2 = Random_Player()
 		obj1 = Manual_Player()
-=======
-		obj1 = Player52()
-		obj2 = Manual_Player()
->>>>>>> 5daeada36e398cc3e9ece71a505aa94bcc65a4ea
 	elif option == '3':
 		obj1 = Manual_Player()
 		obj2 = Manual_Player()
