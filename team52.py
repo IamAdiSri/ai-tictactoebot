@@ -63,6 +63,7 @@ class Random_Player():
 						bt = max( bt,minimax(board, depth+1, (isMax+1)%2, al_bl, fl ))
 						board.board_status[i][j] = '-'
         	return bt
+<<<<<<< HEAD:simulator.py
 		#else:
 		bt = 100000 
 		for i in range(4*allowed_block[0], 4*allowed_block[0]+4):
@@ -73,6 +74,18 @@ class Random_Player():
 					bt = min( bt,minimax(board, depth+1, (isMax+1)%2, al_bl,fl))
 					board.board_status[i][j] = '_';
 		return bt
+=======
+		else:
+			bt = 100000 
+			for i in range(4*allowed_block[0], 4*allowed_block[0]+4):
+				for j in range(4*allowed_block[1], 4*allowed_block[1]+4):
+					if board.board_status[i][j]=='-':
+						board.board_status[i][j] = flag
+						al_bl = [i%4, j%4]
+						bt = min( bt,minimax(board, depth+1, (isMax+1)%2, al_bl,fl))
+						board.board_status[i][j] = '_';
+			return bt
+>>>>>>> 59880c4841901e7f5eb08e484727787e619ea470:team52.py
 
 class Manual_Player:
 	def __init__(self):
