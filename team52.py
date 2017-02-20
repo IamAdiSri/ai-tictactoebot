@@ -11,7 +11,7 @@ def handler(signum, frame):
 	#print 'Signal handler called with signal', signum
 	raise TimedOutExc()
 
-class Random_Player():
+class Player52():
 	def __init__(self):
 		pass
 
@@ -361,11 +361,11 @@ if __name__ == '__main__':
 	obj2 = ''
 	option = sys.argv[1]	
 	if option == '1':
-		obj1 = Random_Player()
-		obj2 = Random_Player()
+		obj1 = Player52()
+		obj2 = Player52()
 
 	elif option == '2':
-		obj1 = Random_Player()
+		obj1 = Player52()
 		obj2 = Manual_Player()
 	elif option == '3':
 		obj1 = Manual_Player()
