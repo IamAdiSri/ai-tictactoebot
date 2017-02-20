@@ -18,22 +18,28 @@ class Random_Player():
 	def move(self, board, old_move, flag):
 		#You have to implement the move function with the same signature as this
 		#Find the list of valid cells allowed
-		maxval = 0
+		print "helllo"
+		maxval = -10000
 		bm = []
 		allowed_block = [old_move[0]%4, old_move[1]%4]
 		cells = board.find_valid_move_cells(old_move)
 		for cell in cells:
+			print cell
+		for cell in cells:
+			print cell
 			board.board_status[cell[0]][cell[1]] = flag
-			if flag==fl1:
-				fl = fl2
+			if flag=='x':
+				fl = 'o'
 			else:
-				fl = fl1
+				fl = 'x'
 			val = minimax(board,0,0,allowed_block, fl)
 			board.board_status[cell[0]][cell[1]] = '-'
 			if val > maxval:
 				maxval = val
 				bm[0] = cell[0]
 				bm[1] = cell[1]	
+		
+		#print
 		return bm
 	
 	def minimax(self, board, depth, isMax, allowed_block, flag):
@@ -41,10 +47,10 @@ class Random_Player():
 		bt = 0
 		k = board.find_terminal_state()
 		print k
-		if flag==fl1:
-			fl = fl2
+		if flag=='x':
+			fl = 'o'
 		else:
-			fl = fl1
+			fl = 'x'
 
 		if k[1]=="WON":
 			return 10
@@ -80,10 +86,10 @@ class Manual_Player:
 	def __init__(self):
 		pass
 	def move(self, board, old_move, flag):
-		print 'Enter your move: <format:row column> (you\'re playing with', flag + ")"	
-		mvp = raw_input()
-		mvp = mvp.split()
-		return (int(mvp[0]), int(mvp[1]))
+		#You have to implement the move function with the same signature as this
+		#Find the list of valid cells allowed
+		cells = board.find_valid_move_cells(old_move)
+		return cells[random.randrange(len(cells))]
 
 class Board:
 
@@ -365,8 +371,8 @@ if __name__ == '__main__':
 		obj2 = Random_Player()
 
 	elif option == '2':
-		obj1 = Random_Player()
-		obj2 = Manual_Player()
+		obj2 = Random_Player()
+		obj1 = Manual_Player()
 	elif option == '3':
 		obj1 = Manual_Player()
 		obj2 = Manual_Player()
