@@ -35,8 +35,7 @@ class Random_Player():
 
 			val = self.minimax(board,0,0, fl,cell)
 			#print val
-			board.board_status[cell[0]][cell[1]] = '-'
-
+			board.revert(cell,'-')
 			if val > maxval:
 				maxval = val
 				bm = cell	
