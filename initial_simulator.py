@@ -11,85 +11,24 @@ def handler(signum, frame):
 	#print 'Signal handler called with signal', signum
 	raise TimedOutExc()
 
-class Player52():
+class Random_Player():
 	def __init__(self):
 		pass
 
-	def move(self, board, old_move, flag):
-		#You have to implement the move function with the same signature as this
-		#Find the list of valid cells allowed
-		print "helllo"
-		maxval = -10000
-		bm = []
-		allowed_block = [old_move[0]%4, old_move[1]%4]
-		cells = board.find_valid_move_cells(old_move)
-		for cell in cells:
-			print cell
-		for cell in cells:
-			print cell
-			board.board_status[cell[0]][cell[1]] = flag
-			if flag=='x':
-				fl = 'o'
-			else:
-				fl = 'x'
-			val = minimax(board,0,0,allowed_block, fl)
-			board.board_status[cell[0]][cell[1]] = '-'
-			if val > maxval:
-				maxval = val
-				bm[0] = cell[0]
-				bm[1] = cell[1]	
-		
-		#print
-		return bm
-	
-	def minimax(self, board, depth, isMax, allowed_block, flag):
-		#to check for the best optimal move
-		bt = 0
-		k = board.find_terminal_state()
-		print k
-		if flag=='x':
-			fl = 'o'
-		else:
-			fl = 'x'
-
-		if k[1]=="WON":
-			return 10
-		elif k[1]=="DRAW":
-			return 0
-		elif k[1]=="LOST":
-			return -10
-		
-		if isMax:	
-			bt = -100000
-			for i in range(4*allowed_block[0], 4*allowed_block[0]+4):
-				for j in range(4*allowed_block[1], 4*allowed_block[1]+4):
-					if board.board_status[i][j]=='-':
-						board.board_status[i][j] = flag				
-						al_bl = [i%4, j%4]
-						bt = max( bt,minimax(board, depth+1, (isMax+1)%2, al_bl, fl ))
-						board.board_status[i][j] = '-'
-        	return bt
-
-		#else:
-		bt = 100000 
-		for i in range(4*allowed_block[0], 4*allowed_block[0]+4):
-			for j in range(4*allowed_block[1], 4*allowed_block[1]+4):
-				if board.board_status[i][j]=='-':
-					board.board_status[i][j] = flag
-					al_bl = [i%4, j%4]
-					bt = min( bt,minimax(board, depth+1, (isMax+1)%2, al_bl,fl))
-					board.board_status[i][j] = '_';
-		return bt
-
-
-class Manual_Player:
-	def __init__(self):
-		pass
 	def move(self, board, old_move, flag):
 		#You have to implement the move function with the same signature as this
 		#Find the list of valid cells allowed
 		cells = board.find_valid_move_cells(old_move)
 		return cells[random.randrange(len(cells))]
+
+class Manual_Player:
+	def __init__(self):
+		pass
+	def move(self, board, old_move, flag):
+		print 'Enter your move: <format:row column> (you\'re playing with', flag + ")"	
+		mvp = raw_input()
+		mvp = mvp.split()
+		return (int(mvp[0]), int(mvp[1]))
 
 class Board:
 
@@ -367,17 +306,12 @@ if __name__ == '__main__':
 	obj2 = ''
 	option = sys.argv[1]	
 	if option == '1':
-		obj1 = Player52()
-		obj2 = Player52()
+		obj1 = Random_Player()
+		obj2 = Random_Player()
 
 	elif option == '2':
-<<<<<<< HEAD
-		obj2 = Random_Player()
-		obj1 = Manual_Player()
-=======
-		obj1 = Player52()
+		obj1 = Random_Player()
 		obj2 = Manual_Player()
->>>>>>> 5daeada36e398cc3e9ece71a505aa94bcc65a4ea
 	elif option == '3':
 		obj1 = Manual_Player()
 		obj2 = Manual_Player()
