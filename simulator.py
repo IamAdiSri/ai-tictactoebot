@@ -18,8 +18,60 @@ class Random_Player():
 	def move(self, board, old_move, flag):
 		#You have to implement the move function with the same signature as this
 		#Find the list of valid cells allowed
+		maxval = 0
+		bm = []
+		allowed_block = [old_move[0]%4, old_move[1]%4]
 		cells = board.find_valid_move_cells(old_move)
-		return cells[random.randrange(len(cells))]
+		for cell in cells:
+			board.board_status[cell[0]][cell[1]] = flag
+			if flag==fl1:
+				fl = fl2
+			else:
+				fl = fl1
+			val = minimax(board,0,0,allowed_block, fl)
+			board.board_status[cell[0]][cell[1]] = '-'
+			if val > maxval:
+				maxval = val
+				bm[0] = cell[0]
+				bm[1] = cell[1]	
+		return bm
+	
+	def minimax(self, board, depth, isMax, allowed_block, flag):
+		#to check for the best optimal move
+		bt = 0
+		k = board.find_terminal_state()
+		print k
+		if flag==fl1:
+			fl = fl2
+		else:
+			fl = fl1
+		if k[1]=="WON":
+			return 10
+		elif k[1]=="DRAW":
+			return 0
+		else:
+			return -10
+		
+		if isMax:	
+			bt = -100000
+			for i in range(4*allowed_block[0], 4*allowed_block[0]+4):
+				for j in range(4*allowed_block[1], 4*allowed_block[1]+4):
+					if board.board_status[i][j]=='-':
+						board.board_status[i][j] = flag				
+						al_bl = [i%4, j%4]
+						bt = max( bt,minimax(board, depth+1, (isMax+1)%2, al_bl, fl ))
+						board.board_status[i][j] = '_'
+        	return bt
+		else:
+			bt = 100000 
+			for i in range(4*allowed_block[0], 4*allowed_block[0]+4):
+				for j in range(4*allowed_block[1], 4*allowed_block[1]+4):
+						if board.board_status[i][j]=='-':
+							board.board_status[i][j] = flag
+							al_bl = [i%4, j%4]
+							bt = min( bt,minimax(board, depth+1, (isMax+1)%2, al_bl,fl))
+							board.board_status[i][j] = '_';
+			return bt
 
 class Manual_Player:
 	def __init__(self):
