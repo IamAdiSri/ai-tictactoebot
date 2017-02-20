@@ -45,11 +45,12 @@ class Random_Player():
 			fl = fl2
 		else:
 			fl = fl1
+
 		if k[1]=="WON":
 			return 10
 		elif k[1]=="DRAW":
 			return 0
-		else:
+		elif k[1]=="LOST":
 			return -10
 		
 		if isMax:	
@@ -60,18 +61,20 @@ class Random_Player():
 						board.board_status[i][j] = flag				
 						al_bl = [i%4, j%4]
 						bt = max( bt,minimax(board, depth+1, (isMax+1)%2, al_bl, fl ))
-						board.board_status[i][j] = '_'
+						board.board_status[i][j] = '-'
         	return bt
-		else:
-			bt = 100000 
-			for i in range(4*allowed_block[0], 4*allowed_block[0]+4):
-				for j in range(4*allowed_block[1], 4*allowed_block[1]+4):
-					if board.board_status[i][j]=='-':
-						board.board_status[i][j] = flag
-						al_bl = [i%4, j%4]
-						bt = min( bt,minimax(board, depth+1, (isMax+1)%2, al_bl,fl))
-						board.board_status[i][j] = '_';
-			return bt
+
+		#else:
+		bt = 100000 
+		for i in range(4*allowed_block[0], 4*allowed_block[0]+4):
+			for j in range(4*allowed_block[1], 4*allowed_block[1]+4):
+				if board.board_status[i][j]=='-':
+					board.board_status[i][j] = flag
+					al_bl = [i%4, j%4]
+					bt = min( bt,minimax(board, depth+1, (isMax+1)%2, al_bl,fl))
+					board.board_status[i][j] = '_';
+		return bt
+
 
 class Manual_Player:
 	def __init__(self):
