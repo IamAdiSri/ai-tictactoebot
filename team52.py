@@ -66,11 +66,11 @@ class Random_Player():
 			bt = 100000 
 			for i in range(4*allowed_block[0], 4*allowed_block[0]+4):
 				for j in range(4*allowed_block[1], 4*allowed_block[1]+4):
-						if board.board_status[i][j]=='-':
-							board.board_status[i][j] = flag
-							al_bl = [i%4, j%4]
-							bt = min( bt,minimax(board, depth+1, (isMax+1)%2, al_bl,fl))
-							board.board_status[i][j] = '_';
+					if board.board_status[i][j]=='-':
+						board.board_status[i][j] = flag
+						al_bl = [i%4, j%4]
+						bt = min( bt,minimax(board, depth+1, (isMax+1)%2, al_bl,fl))
+						board.board_status[i][j] = '_';
 			return bt
 
 class Manual_Player:
