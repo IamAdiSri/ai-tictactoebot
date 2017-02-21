@@ -20,8 +20,10 @@ class Random_Player():
 		#You have to implement the move function with the same signature as this
 		#Find the list of valid cells allowed
 		#print "helllo"
-		maxval = -10000
+		maxval = -100000
 		bm = []
+		alpha = -100000
+		beta = 100000
 		allowed_block = [old_move[0]%4, old_move[1]%4]
 		cells = board.find_valid_move_cells(old_move)
 		for cell in cells:
@@ -32,8 +34,7 @@ class Random_Player():
 				fl = 'x'
 			al_bl = [cell[0]%4, cell[1]%4]
 			board.update(old_move,cell,flag)
-
-			val = self.minimax(board,0,0, fl,cell)
+			val = self.minimax(board,0,0, fl,cell,alpha,beta)
 			#print val
 			board.revert(cell,'-')
 			if val > maxval:
@@ -43,7 +44,7 @@ class Random_Player():
 		print bm
 		return bm
 
-	def minimax(self, board, depth, isMax, flag,old_move):
+	def minimax(self, board, depth, isMax, flag,old_move,alpha,beta):
 		#to check for the best optimal move
 		bt = 0
 		k = board.find_terminal_state()
@@ -54,9 +55,9 @@ class Random_Player():
 			fl = 'o'
 		else:
 			fl = 'x'
-		if k[1]=="WON" and isMax==0:
+		if k[1]=="WON" and k[0]=='x':
 			return -10
-		elif k[1]=="WON" and isMax==1:
+		elif k[1]=="WON" and k[0]=='o':
 			return 10
 		elif k[1]=="DRAW":
 			return 0
@@ -67,18 +68,26 @@ class Random_Player():
 			for cell in cells:
 					if board.board_status[cell[0]][cell[1]]=='-':
 						board.update(old_move,cell,flag)
-						bt = max( bt,self.minimax(board, depth+1, (isMax+1)%2, fl ,cell))
-						print "Max"
+						bt = max( bt,self.minimax(board, depth+1, (isMax+1)%2,fl,cell,alpha,beta))
+						
+						#print "Max"
 						board.revert(cell,'-')
+						alpha = max(bt,alpha)
+						if beta<=alpha:
+							break
 			ans = bt
 		else:
 			bt = 100000 
 			for cell in cells:
 					if board.board_status[cell[0]][cell[1]]=='-':
 						board.update(old_move,cell,flag)
-						bt = min( bt,self.minimax(board, depth+1, (isMax+1)%2,fl,cell))
-						print "Min"
+						bt = min( bt,self.minimax(board, depth+1, (isMax+1)%2,fl,cell,alpha,beta))
+						
+						#print "Min"
 						board.revert(cell,'-')
+						beta = min(bt,beta)
+						if beta<=alpha:
+							break
 			ans = bt
 		return ans
 
