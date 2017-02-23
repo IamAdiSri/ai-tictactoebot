@@ -32,7 +32,7 @@ class Player52():
 			else:
 				fl = 'x'
 			board.update(old_move,cell,flag)
-			val = self.minimax(board, 0, 0, fl, cell, alpha, beta)
+			val = self.minimax(board, 0, 1, fl, cell, alpha, beta)
 			#print val
 			board.revert(cell,'-')
 			if val > maxval:
@@ -45,56 +45,57 @@ class Player52():
 	def minimax(self, board, depth, isMax, flag, old_move, alpha, beta):
 		#to check for the best optimal move
 		k = board.find_terminal_state()
-		#print k
-		if depth==20 :
-			board.print_board()
 		if flag=='x':
 			fl = 'o'
 		else:
 			fl = 'x'
 		if k[1]=="WON" and k[0]=='x':
-			return -10
+			return -100
 		elif k[1]=="WON" and k[0]=='o':
-			return 10
+			return 100
 		elif k[0]=='NONE' and k[1]=="DRAW":
 			return 0
 		elif k[0]=='CONTINUE' and k[1]=='-':
-			# run eval funtion on current state
-			pass
-			
+			if depth >= 3:
+				return self.heuristic1(board, depth, isMax, flag, old_move)		
 		cells = board.find_valid_move_cells(old_move)
 
 		if isMax:	
 			best = -100000
 			for cell in cells:
-					if board.board_status[cell[0]][cell[1]]=='-':
-						board.update(old_move,cell,flag)
-						if(depth==3):
-							board.revert(cell,'-')
-							return 0
-						best = max( best,self.minimax(board, depth+1, (isMax+1)%2, fl, cell, alpha, beta))
-						#print "Max"
-						board.revert(cell,'-')
-						alpha = max(best,alpha)
-						if beta<=alpha:
-							break
+				if board.board_status[cell[0]][cell[1]]=='-':
+					board.update(old_move,cell,flag)
+					best = max(best,self.minimax(board, depth+1, (isMax+1)%2, fl, cell, alpha, beta))
+					board.revert(cell,'-')
+					alpha = max(best,alpha)
+					if beta<=alpha:
+						break
 			ans = best
 		else:
 			best = 100000 
 			for cell in cells:
-					if board.board_status[cell[0]][cell[1]]=='-':
-						board.update(old_move,cell,flag)
-						if(depth==3):
-							board.revert(cell,'-')
-							return 0
-						best = min( best,self.minimax(board, depth+1, (isMax+1)%2, fl, cell, alpha, beta))
-						#print "Min"
-						board.revert(cell,'-')
-						beta = min(best,beta)
-						if beta<=alpha:
-							break
+				if board.board_status[cell[0]][cell[1]]=='-':
+					board.update(old_move,cell,flag)
+					best = min(best,self.minimax(board, depth+1, (isMax+1)%2, fl, cell, alpha, beta))
+					board.revert(cell,'-')
+					beta = min(best,beta)
+					if beta<=alpha:
+						break
 			ans = best
 		return ans
+
+	def heuristic1(self, board, depth, isMax, flag, old_move):
+		bs = board.block_status
+		score = 0
+		for i in range(4):
+			for j in range(4):
+				if bs[i][j] == 'flag':
+					score += 1
+				elif bs[i][j] == 'd':
+					score += 0.5
+				else:
+					score -= 1
+		return score
 
 
 class Manual_Player:
@@ -282,6 +283,7 @@ def gameplay(obj1, obj2):				#game simulator
 		except TimedOutExc:					#timeout error
 #			print e
 			WINNER = 'P2'
+
 			MESSAGE = 'TIME OUT'
 			pts2 = 16
 			break
@@ -328,6 +330,8 @@ def gameplay(obj1, obj2):				#game simulator
 			p2_move = obj2.move(game_board, old_move, fl2)
 		except TimedOutExc:
 			WINNER = 'P1'
+			print "suhan"
+
 			MESSAGE = 'TIME OUT'
 			pts1 = 16
 			break
