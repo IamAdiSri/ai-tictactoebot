@@ -69,7 +69,7 @@ class Player52():
 			for cell in cells:
 					if board.board_status[cell[0]][cell[1]]=='-':
 						board.update(old_move,cell,flag)
-						if(depth==4):
+						if(depth==3):
 							board.revert(cell,'-')
 							return 0
 						best = max( best,self.minimax(board, depth+1, (isMax+1)%2, fl, cell, alpha, beta))
@@ -333,7 +333,7 @@ def gameplay(obj1, obj2):				#game simulator
 			break
 		except Exception as e:
 			WINNER = 'P1'
-			MESSAGE = 'INVALID MOVE'
+			MESSAGE = 'INVALID MOVE by P2'
 			pts1 = 16			
 			break
 		signal.alarm(0)
