@@ -12,7 +12,7 @@ def handler(signum, frame):
 	#print 'Signal handler called with signal', signum
 	raise TimedOutExc()
 
-class Random_Player():
+class Player52():
 	def __init__(self):
 		pass
 
@@ -24,7 +24,6 @@ class Random_Player():
 		bm = []
 		alpha = -100000
 		beta = 100000
-		allowed_block = [old_move[0]%4, old_move[1]%4]
 		cells = board.find_valid_move_cells(old_move)
 		for cell in cells:
 			board.board_status[cell[0]][cell[1]] = flag
@@ -32,9 +31,8 @@ class Random_Player():
 				fl = 'o'
 			else:
 				fl = 'x'
-			al_bl = [cell[0]%4, cell[1]%4]
 			board.update(old_move,cell,flag)
-			val = self.minimax(board,0,0, fl,cell,alpha,beta)
+			val = self.minimax(board, 0, 0, fl, cell, alpha, beta)
 			#print val
 			board.revert(cell,'-')
 			if val > maxval:
@@ -44,9 +42,8 @@ class Random_Player():
 		print bm
 		return bm
 
-	def minimax(self, board, depth, isMax, flag,old_move,alpha,beta):
+	def minimax(self, board, depth, isMax, flag, old_move, alpha, beta):
 		#to check for the best optimal move
-		bt = 0
 		k = board.find_terminal_state()
 		#print k
 		if depth==20 :
@@ -59,40 +56,53 @@ class Random_Player():
 			return -10
 		elif k[1]=="WON" and k[0]=='o':
 			return 10
-		elif k[1]=="DRAW":
+		elif k[0]=='NONE' and k[1]=="DRAW":
 			return 0
+		elif k[0]=='CONTINUE' and k[1]=='-':
+			# run eval funtion on current state
+			pass
+			
 		cells = board.find_valid_move_cells(old_move)
 
 		if isMax:	
-			bt = -100000
+			best = -100000
 			for cell in cells:
 					if board.board_status[cell[0]][cell[1]]=='-':
 						board.update(old_move,cell,flag)
+<<<<<<< HEAD
 						if(depth==7):
 							return alpha
 						bt = max( bt,self.minimax(board, depth+1, (isMax+1)%2,fl,cell,alpha,beta))
+=======
+						best = max( best,self.minimax(board, depth+1, (isMax+1)%2, fl, cell, alpha, beta))
+>>>>>>> e2000098ef26ebb6887dbd40f91ecc9baf4d436b
 						
 						#print "Max"
 						board.revert(cell,'-')
-						alpha = max(bt,alpha)
+						alpha = max(best,alpha)
 						if beta<=alpha:
 							break
-			ans = bt
+			ans = best
 		else:
-			bt = 100000 
+			best = 100000 
 			for cell in cells:
 					if board.board_status[cell[0]][cell[1]]=='-':
 						board.update(old_move,cell,flag)
+<<<<<<< HEAD
 						if(depth==7):
 							return beta
 						bt = min( bt,self.minimax(board, depth+1, (isMax+1)%2,fl,cell,alpha,beta))
 
+=======
+						best = min( best,self.minimax(board, depth+1, (isMax+1)%2, fl, cell, alpha, beta))
+						
+>>>>>>> e2000098ef26ebb6887dbd40f91ecc9baf4d436b
 						#print "Min"
 						board.revert(cell,'-')
-						beta = min(bt,beta)
+						beta = min(best,beta)
 						if beta<=alpha:
 							break
-			ans = bt
+			ans = best
 		return ans
 
 
@@ -180,7 +190,7 @@ class Board:
 				return (row[0],'WON')
 			if (col[0] =='x' or col[0] == 'o') and (col.count(col[0]) == 4):
 				return (col[0],'WON')
-		#checking if diagnols have been won or not
+		#checking if diagonals have been won or not
 		if(bs[0][0] == bs[1][1] == bs[2][2] ==bs[3][3]) and (bs[0][0] == 'x' or bs[0][0] == 'o'):
 			return (bs[0][0],'WON')
 		if(bs[0][3] == bs[1][2] == bs[2][1] ==bs[3][0]) and (bs[0][3] == 'x' or bs[0][3] == 'o'):
@@ -203,7 +213,7 @@ class Board:
 		return new_move in cells
 
 	def update(self, old_move, new_move, ply):
-		#updating the game board and block status as per the move that has been passed in the arguements
+		#updating the game board and block status as per the move that has been passed in the arguments
 		if(self.check_valid_move(old_move, new_move)) == False:
 			return 'UNSUCCESSFUL'
 		self.board_status[new_move[0]][new_move[1]] = ply
@@ -243,8 +253,8 @@ class Board:
 		self.block_status[x][y] = 'd'
 		return 'SUCCESSFUL'
 
-	def revert(self,  new_move, ply):
-		#updating the game board and block status as per the move that has been passed in the arguements
+	def revert(self, new_move, ply):
+		#updating the game board and block status as per the move that has been passed in the arguments
 		self.board_status[new_move[0]][new_move[1]] = ply
 		x = new_move[0]/4
 		y = new_move[1]/4
@@ -398,11 +408,11 @@ if __name__ == '__main__':
 	obj2 = ''
 	option = sys.argv[1]	
 	if option == '1':
-		obj1 = Random_Player()
-		obj2 = Random_Player()
+		obj1 = Player52()
+		obj2 = Player52()
 
 	elif option == '2':
-		obj2 = Random_Player()
+		obj2 = Player52()
 		obj1 = Manual_Player()
 	elif option == '3':
 		obj1 = Manual_Player()
