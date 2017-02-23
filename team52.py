@@ -54,9 +54,10 @@ class Player52():
 			return 100
 		elif k[0]=='NONE' and k[1]=="DRAW":
 			return 0
-		elif k[0]=='CONTINUE' and k[1]=='-':
-			if depth >= 4:
-				return self.heuristic1(board, depth, isMax, flag, old_move)		
+
+		if depth >= 3: # run heuristic
+			return self.heuristic1(board, depth, isMax, flag, old_move)
+
 		cells = board.find_valid_move_cells(old_move)
 
 		if isMax:	
@@ -98,7 +99,6 @@ class Player52():
 					score += 0.5
 				elif bs[i][j] == alt_flag:
 					score -= 1
-		#print "heuristic score:",score
 		return score
 
 
@@ -397,9 +397,9 @@ if __name__ == '__main__':
 
 	if len(sys.argv) != 2:
 		print 'Usage: python simulator.py <option>'
-		print '<option> can be 1 => Random player vs. Random player'
-		print '                2 => Human vs. Random Player'
-		print '                3 => Human vs. Human'
+		print '<option> can be 1 => Player52 vs. Player52'
+		print '                2 => Rand_Func vs. Player52'
+		print '                3 => Rand_Func vs. Rand_Func'
 		sys.exit(1)
  
 	obj1 = ''
