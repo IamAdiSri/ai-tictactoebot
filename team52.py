@@ -88,15 +88,13 @@ class Player52():
 			for cell in cells:
 					if board.board_status[cell[0]][cell[1]]=='-':
 						board.update(old_move,cell,flag)
-<<<<<<< HEAD
+
 						if(depth==7):
 							return beta
+							
 						bt = min( bt,self.minimax(board, depth+1, (isMax+1)%2,fl,cell,alpha,beta))
-
-=======
 						best = min( best,self.minimax(board, depth+1, (isMax+1)%2, fl, cell, alpha, beta))
 						
->>>>>>> e2000098ef26ebb6887dbd40f91ecc9baf4d436b
 						#print "Min"
 						board.revert(cell,'-')
 						beta = min(best,beta)
