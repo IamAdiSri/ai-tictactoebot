@@ -69,9 +69,9 @@ class Player52():
 			for cell in cells:
 					if board.board_status[cell[0]][cell[1]]=='-':
 						board.update(old_move,cell,flag)
-						if(depth==7):
-							return alpha
-						bt = max( bt,self.minimax(board, depth+1, (isMax+1)%2,fl,cell,alpha,beta))
+						if(depth==4):
+							board.revert(cell,'-')
+							return 0
 						best = max( best,self.minimax(board, depth+1, (isMax+1)%2, fl, cell, alpha, beta))
 						#print "Max"
 						board.revert(cell,'-')
@@ -84,13 +84,10 @@ class Player52():
 			for cell in cells:
 					if board.board_status[cell[0]][cell[1]]=='-':
 						board.update(old_move,cell,flag)
-
-						if(depth==7):
-							return beta
-
-						bt = min( bt,self.minimax(board, depth+1, (isMax+1)%2,fl,cell,alpha,beta))
+						if(depth==3):
+							board.revert(cell,'-')
+							return 0
 						best = min( best,self.minimax(board, depth+1, (isMax+1)%2, fl, cell, alpha, beta))
-						
 						#print "Min"
 						board.revert(cell,'-')
 						beta = min(best,beta)
