@@ -26,7 +26,6 @@ class Player52():
 		beta = 100000
 		cells = board.find_valid_move_cells(old_move)
 		for cell in cells:
-			board.board_status[cell[0]][cell[1]] = flag
 			if flag=='x':
 				fl = 'o'
 			else:
@@ -56,7 +55,7 @@ class Player52():
 		elif k[0]=='NONE' and k[1]=="DRAW":
 			return 0
 		elif k[0]=='CONTINUE' and k[1]=='-':
-			if depth >= 3:
+			if depth >= 4:
 				return self.heuristic1(board, depth, isMax, flag, old_move)		
 		cells = board.find_valid_move_cells(old_move)
 
@@ -85,16 +84,21 @@ class Player52():
 		return ans
 
 	def heuristic1(self, board, depth, isMax, flag, old_move):
+		alt_flag = 'x'
+		if flag == 'x':
+			alt_flag = 'o'
+
 		bs = board.block_status
 		score = 0
 		for i in range(4):
 			for j in range(4):
-				if bs[i][j] == 'flag':
+				if bs[i][j] == flag:
 					score += 1
 				elif bs[i][j] == 'd':
 					score += 0.5
-				else:
+				elif bs[i][j] == alt_flag:
 					score -= 1
+		#print "heuristic score:",score
 		return score
 
 
@@ -251,7 +255,6 @@ class Board:
 		x = new_move[0]/4
 		y = new_move[1]/4
 		fl = 0
-		bs = self.board_status
 		self.block_status[x][y]=ply
 		return "SUCCESSFUL"
 		#print "yo"
