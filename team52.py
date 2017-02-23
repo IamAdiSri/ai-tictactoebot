@@ -46,8 +46,8 @@ class Player52():
 		#to check for the best optimal move
 		k = board.find_terminal_state()
 		#print k
-		if depth==20 :
-			board.print_board()
+		# if depth==20 :
+		# 	board.print_board()
 		if flag=='x':
 			fl = 'o'
 		else:
@@ -59,42 +59,53 @@ class Player52():
 		elif k[0]=='NONE' and k[1]=="DRAW":
 			return 0
 		elif k[0]=='CONTINUE' and k[1]=='-':
-			# run eval funtion on current state
-			pass
+			if depth >= 3:
+				return heuristic1(board, depth, isMax, flag, old_move)
 			
 		cells = board.find_valid_move_cells(old_move)
 
 		if isMax:	
 			best = -100000
 			for cell in cells:
-					if board.board_status[cell[0]][cell[1]]=='-':
-						board.update(old_move,cell,flag)
-						if(depth==4):
-							board.revert(cell,'-')
-							return 0
-						best = max( best,self.minimax(board, depth+1, (isMax+1)%2, fl, cell, alpha, beta))
-						#print "Max"
-						board.revert(cell,'-')
-						alpha = max(best,alpha)
-						if beta<=alpha:
-							break
+					board.update(old_move,cell,flag)
+					# if(depth==4):
+					# 	board.revert(cell,'-')
+					# 	return 0
+					best = max( best,self.minimax(board, depth+1, (isMax+1)%2, fl, cell, alpha, beta))
+					#print "Max"
+					board.revert(cell,'-')
+					alpha = max(best,alpha)
+					if beta<=alpha:
+						break
 			ans = best
 		else:
 			best = 100000 
 			for cell in cells:
-					if board.board_status[cell[0]][cell[1]]=='-':
-						board.update(old_move,cell,flag)
-						if(depth==3):
-							board.revert(cell,'-')
-							return 0
-						best = min( best,self.minimax(board, depth+1, (isMax+1)%2, fl, cell, alpha, beta))
-						#print "Min"
-						board.revert(cell,'-')
-						beta = min(best,beta)
-						if beta<=alpha:
-							break
+					board.update(old_move,cell,flag)
+					# if(depth==3):
+					# 	board.revert(cell,'-')
+					# 	return 0
+					best = min( best,self.minimax(board, depth+1, (isMax+1)%2, fl, cell, alpha, beta))
+					#print "Min"
+					board.revert(cell,'-')
+					beta = min(best,beta)
+					if beta<=alpha:
+						break
 			ans = best
 		return ans
+
+	def heuristic1(self, board, depth, isMax, flag, old_move):
+		bs = board.block_status
+		score = 0
+		for i in range(4):
+			for j in range(4):
+				if bs[i][j] == 'flag':
+					score += 1
+				elif bs[i][j] == 'd':
+					score += 0.5
+				else:
+					score -= 1
+		return score
 
 
 class Manual_Player:
