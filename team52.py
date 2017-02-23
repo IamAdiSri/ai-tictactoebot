@@ -32,7 +32,7 @@ class Player52():
 			else:
 				fl = 'x'
 			board.update(old_move,cell,flag)
-			val = self.minimax(board, 0, 1, fl, cell, alpha, beta)
+			val = self.minimax(board, 0, 0, fl, cell, alpha, beta)
 			#print val
 			board.revert(cell,'-')
 			if val > maxval:
