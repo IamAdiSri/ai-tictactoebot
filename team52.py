@@ -33,7 +33,7 @@ class Player52():
 			board.update(old_move,cell,flag)
 			val = self.minimax(board, 0, 0, fl, cell, alpha, beta)
 			#print val
-			board.revert(cell,'-')
+			self.revert(board, cell,'-')
 			if val > maxval:
 				maxval = val
 				bm = cell	
@@ -66,7 +66,7 @@ class Player52():
 				if board.board_status[cell[0]][cell[1]]=='-':
 					board.update(old_move,cell,flag)
 					best = max(best,self.minimax(board, depth+1, (isMax+1)%2, fl, cell, alpha, beta))
-					board.revert(cell,'-')
+					self.revert(board, cell,'-')
 					alpha = max(best,alpha)
 					if beta<=alpha:
 						break
@@ -77,7 +77,7 @@ class Player52():
 				if board.board_status[cell[0]][cell[1]]=='-':
 					board.update(old_move,cell,flag)
 					best = min(best,self.minimax(board, depth+1, (isMax+1)%2, fl, cell, alpha, beta))
-					board.revert(cell,'-')
+					self.revert(board, cell,'-')
 					beta = min(best,beta)
 					if beta<=alpha:
 						break
@@ -100,7 +100,15 @@ class Player52():
 				elif bs[i][j] == alt_flag:
 					score -= 1
 		return score
-
+	
+	def revert(self, board, new_move, ply):
+		#updating the game board and block status as per the move that has been passed in the arguments
+		board.board_status[new_move[0]][new_move[1]] = ply
+		x = new_move[0]/4
+		y = new_move[1]/4
+		fl = 0
+		board.block_status[x][y]=ply
+		return "SUCCESSFUL"
 
 class Manual_Player:
 	def __init__(self):
@@ -248,18 +256,6 @@ class Board:
 					return 'SUCCESSFUL'
 		self.block_status[x][y] = 'd'
 		return 'SUCCESSFUL'
-
-	def revert(self, new_move, ply):
-		#updating the game board and block status as per the move that has been passed in the arguments
-		self.board_status[new_move[0]][new_move[1]] = ply
-		x = new_move[0]/4
-		y = new_move[1]/4
-		fl = 0
-		self.block_status[x][y]=ply
-		return "SUCCESSFUL"
-		#print "yo"
-		#checking if a block has been won or drawn or not after the current move
-		
 
 def gameplay(obj1, obj2):				#game simulator
 
