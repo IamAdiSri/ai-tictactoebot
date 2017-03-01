@@ -14,6 +14,7 @@ def handler(signum, frame):
 
 class Player52():
 	def __init__(self):
+		end_moves = []
 		pass
 
 	def move(self, board, old_move, flag):
@@ -23,7 +24,10 @@ class Player52():
 		bm = []
 		alpha = -100000
 		beta = 100000
+
 		cells = self.find_valid_move_cells(board, old_move)
+		# cells = self.find_valid_move_cells_optimised(board, old_move, flag)
+
 		for cell in cells:
 			if flag=='x':
 				fl = 'o'
@@ -37,7 +41,7 @@ class Player52():
 				maxval = val
 				bm = cell	
 
-		print bm
+		# print bm
 		return bm
 
 	def find_valid_move_cells(self, board, old_move):
@@ -90,7 +94,6 @@ class Player52():
 			return 0
 
 		if depth >= 3: # run heuristic
-			#print "yayay"
 			return self.heuristic2(board, depth, isMax, flag, old_move)
 
 		cells = self.find_valid_move_cells(board, old_move)
@@ -298,8 +301,80 @@ class Player52():
 
 	def heuristic3(self, board, depth, isMax, flag, old_move):
 		print "kakka"
-		
 
+	def find_valid_move_cells_optimised(self, board, old_move, flag):
+		#returns the valid cells allowed given the last move and the current board state
+		allowed_cells = []
+		allowed_block = [old_move[0]%4, old_move[1]%4]
+		#checks if the move is a free move or not based on the rules
+
+		if old_move != (-1,-1) and board.block_status[allowed_block[0]][allowed_block[1]] == '-':
+			for i in range(4*allowed_block[0], 4*allowed_block[0]+4):
+				for j in range(4*allowed_block[1], 4*allowed_block[1]+4):
+					if board.board_status[i][j] == '-':
+						allowed_cells.append((i,j))
+		else:
+			for i in range(16):
+				for j in range(16):
+					if board.board_status[i][j] == '-' and board.block_status[i/4][j/4] == '-':
+						allowed_cells.append((i,j))
+
+		update_end_moves(self, board, allowed_cells, flag)
+		best_allowed_moves = []
+
+		for cell in allowed_cells:
+			if cell in end_moves:
+				best_allowed_moves.append(cell)
+
+		if best_allowed_moves != []:
+			return best_allowed_moves
+
+		return allowed_cells	
+
+	def update_end_moves(self, board, allowed_cells, flag):
+		for cell in end_moves:
+			if board.board_status[cell[0]][cell[1]] != '-':
+				self.end_moves.remove(cell)
+
+		for cell in allowed_cells:
+			if cell in self.end_moves:
+				continue
+			
+			i = cell[0]%4
+			j = cell[1]%4
+
+			# checking if one short of row
+			count = 0
+			for x in range(cell[0]-i, cell[0]+4):
+				if board.board_status[x][cell[1]] == flag:
+					count+=1
+			if count == 3:
+					self.end_moves.append(cell)
+					continue
+			
+			# checking if one short of column
+			count = 0
+			for x in range(cell[1]-j, cell[1]+4):
+				if board.board_status[cell[0]][x] == flag:
+					count+=1
+			if count == 3:
+					self.end_moves.append(cell)
+					continue
+			
+			# checking if one short of diagonals
+			count = 0
+			if i == j:		# top left to bottom right
+				for x in range(0, 4):
+					if board.board_status[cell[0]-i+x][cell[1]-j+x] == flag:
+						count+=1
+			elif i+j == 3:	# top right to bottom left
+				for x in range(0, 4):
+					y = 3-x
+					if board.board_status[cell[0]-i+x][cell[1]-j+y] == flag:
+						count+=1
+			if count == 3:
+					self.end_moves.append(cell)
+					continue
 
 	def revert(self, board, new_move, ply):
 		#updating the game board and block status as per the move that has been passed in the arguments
@@ -366,7 +441,7 @@ class Board:
 				for j in range(16):
 					if self.board_status[i][j] == '-' and self.block_status[i/4][j/4] == '-':
 						allowed_cells.append((i,j))
-		return allowed_cells	
+		return allowed_cells		
 
 	def find_terminal_state(self):
 		#checks if the game is over(won or drawn) and returns the player who have won the game or the player who has higher blocks in case of a draw
@@ -480,7 +555,6 @@ def gameplay(obj1, obj2):				#game simulator
 		try:									#try to get player 1's move			
 			p1_move = obj1.move(game_board, old_move, fl1)
 		except TimedOutExc:					#timeout error
-#			print e
 			WINNER = 'P2'
 
 			MESSAGE = 'TIME OUT'
