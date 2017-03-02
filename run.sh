@@ -1,6 +1,7 @@
 #!/bin/bash
-for i in 1 2 13 4 15 6 7 8 9 0
+cd ou_v1
+for i in 1 2 3 4 5 6 7 8 9 10
 do
     touch $i 
-    python team52.py 2 > $i
+    python ../team52.py 3 > $i
 done
