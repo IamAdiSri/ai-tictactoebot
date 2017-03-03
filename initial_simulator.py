@@ -6,6 +6,7 @@ import time
 import copy
 import vta
 from team52 import Player52
+from team52_arjun_copy import Player52 as original_arjun
 from team52_legacy import Player52_legacy
 from aiBot9_check import aiBot
 from team52_arjun import Player52 as arjun
@@ -321,12 +322,12 @@ if __name__ == '__main__':
 	option = sys.argv[1]	
 	if option == '1':
 		#obj1 = vta.Thuglife()
-		obj1 = atv.Thuglife()
-		obj2 = Player52()
+		obj1 = arjun()
+		obj2 = aiBot()
 
 	elif option == '2':
-		obj1 = atv.Thuglife()
-		obj2 = Player52()	
+		obj1 = original_arjun()
+		obj2 = vta.Two_Dudes()	
 	elif option == '3':
 		obj1 = Random_Player()
 		obj2 = Player52()
