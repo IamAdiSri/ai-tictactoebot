@@ -112,7 +112,7 @@ class Player52():
 		elif k[0]=='NONE' and k[1]=="DRAW":
 			return 0
 
-		if depth >= 4: # run heuristic
+		if depth >= 3: # run heuristic
 			return self.heuristic2(board, depth, isMax, flag, old_move)
 			
 		cells = self.find_valid_move_cells_optimised(board, old_move, flag, isMax)
@@ -172,10 +172,10 @@ class Player52():
 		alt_flag = 'x'
 		if flag == 'x' and isMax == 1:
 			alt_flag = 'o'
-		if flag == 'o' and isMax == 0:
+		elif flag == 'o' and isMax == 0:
 			flag = 'x'
 			alt_flag = '0'
-		if flag == 'x' and isMax == 0:
+		elif flag == 'x' and isMax == 0:
 			flag = 'o'
 			alt_flag = 'x'
 		#print isMax, flag
@@ -488,14 +488,14 @@ class Player52():
 			count = 0 
 			for i in range(16):
 				for j in range(4*allowed_block[1], 4*allowed_block[1]+4):
-					if board.board_status[i][j] == '-' and board.block_status[i/4][j/4] == '-' and count  <= 25:
+					if board.board_status[i][j] == '-' and board.block_status[i/4][j/4] == '-' and count  <= 20:
 						count += 1
 						allowed_cells.append((i,j))
 					
 			if allowed_cells == []:
 				for i in range(4*allowed_block[0], 4*allowed_block[0]+4):
 					for j in range(16):
-						if board.board_status[i][j] == '-' and board.block_status[i/4][j/4] == '-' and count <= 25:
+						if board.board_status[i][j] == '-' and board.block_status[i/4][j/4] == '-' and count <= 20:
 							count += 1
 							allowed_cells.append((i,j))
 			if allowed_cells == []:
