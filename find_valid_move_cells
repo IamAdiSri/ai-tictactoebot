@@ -1,0 +1,50 @@
+def find_valid_move_cells(self, board, old_move):
+		#returns the valid cells allowed given the last move and the current board state
+		allowed_cells = []
+		allowed_block = [old_move[0]%4, old_move[1]%4]
+		#checks if the move is a free move or not based on the rules
+
+		if old_move != (-1,-1) and board.block_status[allowed_block[0]][allowed_block[1]] == '-':
+			for i in range(4*allowed_block[0], 4*allowed_block[0]+4):
+				for j in range(4*allowed_block[1], 4*allowed_block[1]+4):
+					if board.board_status[i][j] == '-':
+						allowed_cells.append((i,j))
+		else:
+			count = 0 
+			for i in range(16):
+				for j in range(4*allowed_block[1], 4*allowed_block[1]+4):
+					if board.board_status[i][j] == '-' and board.block_status[i/4][j/4] == '-' and count  <= 16:
+						count += 1
+						allowed_cells.append((i,j))
+					
+			if allowed_cells == []:
+				for i in range(4*allowed_block[0], 4*allowed_block[0]+4):
+					for j in range(16):
+						if board.board_status[i][j] == '-' and board.block_status[i/4][j/4] == '-' and count <= 16:
+							count += 1
+							allowed_cells.append((i,j))
+			if allowed_cells == []:
+				for i in range(16):
+					for j in range(16):
+						if i/4 == j/4:
+							if board.board_status[i][j] == '-' and board.block_status[i/4][j/4] == '-' and count  <= 16:
+								count += 1
+								allowed_cells.append((i,j))
+			
+			if allowed_cells == []:
+				for i in range(16):
+					for j in range(16):
+						if i/4 + j/4 == 3:
+							if board.board_status[i][j] == '-' and board.block_status[i/4][j/4] == '-' and count  <= 16:
+								count += 1
+								allowed_cells.append((i,j))
+								
+			#print allowed_cells
+			if allowed_cells == []:
+				for i in range(16):
+					for j in range(16):
+						if board.board_status[i][j] == '-' and board.block_status[i/4][j/4] == '-' and count <=  16:
+							count+=1
+							allowed_cells.append((i,j))
+
+		return allowed_cells
