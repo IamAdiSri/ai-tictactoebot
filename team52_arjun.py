@@ -172,300 +172,316 @@ class Player52():
 		alt_flag = 'x'
 		if flag == 'x' and isMax == 1:
 			alt_flag = 'o'
-		if flag == 'o' and isMax == 0:
+		elif flag == 'o' and isMax == 0:
 			flag = 'x'
-			alt_flag = '0'
-		if flag == 'x' and isMax == 0:
+			alt_flag = 'o'
+		elif flag == 'x' and isMax == 0:
 			flag = 'o'
 			alt_flag = 'x'
 		#print isMax, flag
 		bs = board.block_status
 		bds = board.board_status
-		score = -100000
+		score = 0
 		#checking for x/o  at corner, center and any other position of the block status for max and min
 		for i in range(4):
 			for j in range(4):
 				if bs[i][j] == flag:
 					if (i==0 or i==3) and (j==0 or j==3):
-						score+=3
+						score += 5
 					elif ((i==1 or i==2) and (j==0 or j==3)) or ((i==0 or i==3) and (j==1 or j==2)):
-						score+=5
+						score += 3
 					else:
-						score+=10
+						score += 10
 				elif bs[i][j] == 'd':
-					score += 0.5
+					score += 0
 				elif bs[i][j] == alt_flag:
 					if (i==0 or i==3) and (j==0 or j==3):
-						score-=3
+						score -= 5
 					elif ((i==1 or i==2) and (j==0 or j==3)) or ((i==0 or i==3) and (j==1 or j==2)):
-						score-=5
+						score -= 3
 					else:
-						score-=10
+						score -= 10
 		#print score
-		
+		#checking for x/o  at corner, center and any other position of the block status for max and min
+		for i in range(16):
+			for j in range(16):
+				if bds[i][j] == flag:
+					if (i%4==0 or i%4==3) and (j%4==0 or j%4==3):
+						score += 20
+					elif ((i%4==1 or i%4==2) and (j%4==0 or j%4==3)) or ((i%4==0 or i%4==3) and (j%4==1 or j%4==2)):
+						score += 15
+					else:
+						score += 30
+				elif bds[i][j] == alt_flag:
+					if (i%4==0 or i%4==3) and (j%4==0 or j%4==3):
+						score -= 20
+					elif ((i%4==1 or i%4==2) and (j%4==0 or j%4==3)) or ((i%4==0 or i%4==3) and (j%4==1 or j%4==2)):
+						score -= 15
+					else:
+						score -= 30
 		#checking for 2 continuous x/o in a column/row/diagonal of the board_status for given max player
-		if isMax:
-			# for x in range(4):
-			# 	for y in range(4):
-			# 		for i in range(4):
-			# 			if (((bds[4*x+i][4*y] == bds[4*x+i][4*y+1]) and (bds[4*x+i][4*y+3] == bds[4*x+i][4*y+2]) and bds[4*x+i][4*y] == flag and (not bds[4*x+i][4*y+3] == alt_flag)) or 
-			# 				((bds[4*x+i][4*y+1] == bds[4*x+i][4*y+2]) and (bds[4*x+i][4*y] == bds[4*x+i][4*y+3]) and bds[4*x+i][4*y+1] == flag and (not bds[4*x+i][4*y] == alt_flag))):
-			# 				score += 200
-			# 			if (((bds[4*x][4*y+i] == bds[4*x+1][4*y+i]) and (bds[4*x+3][4*y+i] == bds[4*x+2][4*y+i]) and bds[4*x][4*y+i] == flag and (not bds[4*x+3][4*y+i] == alt_flag)) or 
-			# 				((bds[4*x+1][4*y+i] == bds[4*x+2][4*y+i]) and (bds[4*x][4*y+i]== bds[4*x+3][4*y+i]) and bds[4*x+1][4*y+i] == flag and (not bds[4*x][4*y+i] == alt_flag))):
-			# 				score += 200
-			# 			if (((bds[4*x+i][4*y] == bds[4*x+i][4*y+2]) and (bds[4*x+i][4*y+1] == bds[4*x+i][4*y+3]) and bds[4*x+i][4*y] == flag and (not bds[4*x+i][4*y+3] == alt_flag)) or 
-			# 				((bds[4*x+i][4*y+1] == bds[4*x+i][4*y+3]) and  (bds[4*x+i][4*y]== bds[4*x+i][4*y]) and bds[4*x+i][4*y+1] == flag and (not bds[4*x+i][4*y+2] == alt_flag))):
-			# 				score += 200
-			# 			if (((bds[4*x][4*y+i] == bds[4*x+2][4*y+i]) and (bds[4*x+1][4*y+i] == bds[4*x+3][4*y+i]) and bds[4*x][4*y+i] == flag and (not bds[4*x+3][4*y+i] == alt_flag)) or 
-			# 				((bds[4*x+1][4*y+i] == bds[4*x+3][4*y+i]) and (bds[4*x][4*y+i]== bds[4*x+2][4*y+i]) and bds[4*x+1][4*y+i] == flag and (not bds[4*x][4*y+i] == alt_flag))):
-			# 				score += 200
-			# 			if (((bds[4*x+i][4*y] == bds[4*x+i][4*y+3]) and (bds[4*x+i][4*y+2] == bds[4*x+i][4*y+1]) and bds[4*x+i][4*y] == flag and (not bds[4*x+i][4*y+2] == alt_flag)) or 
-			# 				((bds[4*x+i][4*y+2] == bds[4*x+i][4*y+3]) and  (bds[4*x+i][4*y+1]== bds[4*x+i][4*y]) and bds[4*x+i][4*y+2] == flag and (not bds[4*x+i][4*y+1] == alt_flag))):
-			# 				score += 200
-			# 			if (((bds[4*x][4*y+i] == bds[4*x+3][4*y+i]) and (bds[4*x+2][4*y+i] == bds[4*x+1][4*y+i]) and bds[4*x][4*y+i] == flag and (not bds[4*x+2][4*y+i] == alt_flag)) or 
-			# 				((bds[4*x+2][4*y+i] == bds[4*x+3][4*y+i]) and (bds[4*x+1][4*y+i]== bds[4*x][4*y+i]) and bds[4*x+2][4*y+i] == flag and (not bds[4*x+1][4*y+i] == alt_flag))):
-			# 				score += 200
-					
-			# 		if (((bds[4*x][4*y] == bds[4*x+1][4*y+1]) and (bds[4*x+3][4*y+3] == bds[4*x+2][4*y+2]) and (bds[4*x][4*y] == flag) and (not bds[4*x+3][4*y+3] == alt_flag)) 
-			# 			or ((bds[4*x+1][4*y+1] == bds[4*x+2][4*y+2]) and (bds[4*x][4*y] == bds[4*x+3][4*y+3]) and (bds[4*x+1][4*y+1] == flag) and (not bds[4*x][4*y] == alt_flag))):
-			# 			score += 250
-			# 		if (((bds[4*x+3][4*y] == bds[4*x+2][4*y+1]) and (bds[4*x][4*y+3] == bds[4*x+1][4*y+2])  and (bds[4*x+3][4*y] == flag) and (not bds[4*x][4*y+3] == alt_flag))
-			# 			or ((bds[4*x+2][4*y+1] == bds[4*x+1][4*y+2]) and (bds[4*x+3][4*y] == bds[4*x][4*y+3]) and (bds[4*x][4*y+3]==flag) and (not bds[4*x+3][4*y] == alt_flag))):
-			# 			score += 250
-			# 		if (((bds[4*x+2][4*y+2] == bds[4*x+3][4*y+3]) and (bds[4*x][4*y] == bds[4*x+1][4*y+1]) and (bds[4*x+2][4*y+2] == flag) and (not bds[4*x][4*y] == alt_flag)) 
-			# 			or ((bds[4*x][4*y] == bds[4*x+3][4*y+3]) and (bds[4*x+1][4*y+1] == bds[4*x+2][4*y+2]) and (bds[4*x][4*y] == flag) and (not bds[4*x+1][4*y+1] == alt_flag))):
-			# 			score += 250
-			# 		if (((bds[4*x+1][4*y+2] == bds[4*x][4*y+3]) and (bds[4*x+2][4*y+1] == bds[4*x+3][4*y])  and (bds[4*x][4*y+3] == flag) and (not bds[4*x+2][4*y+1] == alt_flag))
-			# 			or ((bds[4*x+3][4*y] == bds[4*x+1][4*y+2]) and (bds[4*x+2][4*y+1]== bds[4*x][4*y+3]) and (bds[4*x+3][4*y] == flag) and (not bds[4*x+1][4*y+2] == alt_flag))):
-			# 			score += 250
-			# 		if (((bds[4*x][4*y] == bds[4*x+2][4*y+2]) and (bds[4*x+1][4*y+1] == bds[4*x+3][4*y+3]) and (bds[4*x+2][4*y+2] == flag) and (not bds[4*x+1][4*y+1] == alt_flag)) 
-			# 			or ((bds[4*x+1][4*y+1] == bds[4*x+3][4*y+3]) and (bds[4*x][4*y] == bds[4*x+2][4*y+2]) and (bds[4*x+3][4*y+3] == flag) and (not bds[4*x][4*y] == alt_flag))):
-			# 			score += 250
-			# 		if (((bds[4*x+3][4*y] == bds[4*x][4*y+3]) and (bds[4*x+1][4*y+2] == bds[4*x+1][4*y+2])  and (bds[4*x+3][4*y] == flag) and (not bds[4*x+1][4*y+2] == alt_flag))
-			# 			or ((bds[4*x+2][4*y+1] == bds[4*x][4*y+3]) and (bds[4*x+1][4*y+2]== bds[4*x+3][4*y+0]) and (bds[4*x][4*y+3] == flag) and (not bds[4*x+1][4*y+2] == alt_flag))):
-			# 			score += 250
+
+		# for x in range(4):
+		# 	for y in range(4):
+		# 		for i in range(4):
+		# 			if (((bds[4*x+i][4*y] == bds[4*x+i][4*y+1]) and (bds[4*x+i][4*y+3] == bds[4*x+i][4*y+2]) and bds[4*x+i][4*y] == flag and (not bds[4*x+i][4*y+3] == alt_flag)) or 
+		# 				((bds[4*x+i][4*y+1] == bds[4*x+i][4*y+2]) and (bds[4*x+i][4*y] == bds[4*x+i][4*y+3]) and bds[4*x+i][4*y+1] == flag and (not bds[4*x+i][4*y] == alt_flag))):
+		# 				score += 200
+		# 			if (((bds[4*x][4*y+i] == bds[4*x+1][4*y+i]) and (bds[4*x+3][4*y+i] == bds[4*x+2][4*y+i]) and bds[4*x][4*y+i] == flag and (not bds[4*x+3][4*y+i] == alt_flag)) or 
+		# 				((bds[4*x+1][4*y+i] == bds[4*x+2][4*y+i]) and (bds[4*x][4*y+i]== bds[4*x+3][4*y+i]) and bds[4*x+1][4*y+i] == flag and (not bds[4*x][4*y+i] == alt_flag))):
+		# 				score += 200
+		# 			if (((bds[4*x+i][4*y] == bds[4*x+i][4*y+2]) and (bds[4*x+i][4*y+1] == bds[4*x+i][4*y+3]) and bds[4*x+i][4*y] == flag and (not bds[4*x+i][4*y+3] == alt_flag)) or 
+		# 				((bds[4*x+i][4*y+1] == bds[4*x+i][4*y+3]) and  (bds[4*x+i][4*y]== bds[4*x+i][4*y]) and bds[4*x+i][4*y+1] == flag and (not bds[4*x+i][4*y+2] == alt_flag))):
+		# 				score += 200
+		# 			if (((bds[4*x][4*y+i] == bds[4*x+2][4*y+i]) and (bds[4*x+1][4*y+i] == bds[4*x+3][4*y+i]) and bds[4*x][4*y+i] == flag and (not bds[4*x+3][4*y+i] == alt_flag)) or 
+		# 				((bds[4*x+1][4*y+i] == bds[4*x+3][4*y+i]) and (bds[4*x][4*y+i]== bds[4*x+2][4*y+i]) and bds[4*x+1][4*y+i] == flag and (not bds[4*x][4*y+i] == alt_flag))):
+		# 				score += 200
+		# 			if (((bds[4*x+i][4*y] == bds[4*x+i][4*y+3]) and (bds[4*x+i][4*y+2] == bds[4*x+i][4*y+1]) and bds[4*x+i][4*y] == flag and (not bds[4*x+i][4*y+2] == alt_flag)) or 
+		# 				((bds[4*x+i][4*y+2] == bds[4*x+i][4*y+3]) and  (bds[4*x+i][4*y+1]== bds[4*x+i][4*y]) and bds[4*x+i][4*y+2] == flag and (not bds[4*x+i][4*y+1] == alt_flag))):
+		# 				score += 200
+		# 			if (((bds[4*x][4*y+i] == bds[4*x+3][4*y+i]) and (bds[4*x+2][4*y+i] == bds[4*x+1][4*y+i]) and bds[4*x][4*y+i] == flag and (not bds[4*x+2][4*y+i] == alt_flag)) or 
+		# 				((bds[4*x+2][4*y+i] == bds[4*x+3][4*y+i]) and (bds[4*x+1][4*y+i]== bds[4*x][4*y+i]) and bds[4*x+2][4*y+i] == flag and (not bds[4*x+1][4*y+i] == alt_flag))):
+		# 				score += 200
+				
+		# 		if (((bds[4*x][4*y] == bds[4*x+1][4*y+1]) and (bds[4*x+3][4*y+3] == bds[4*x+2][4*y+2]) and (bds[4*x][4*y] == flag) and (not bds[4*x+3][4*y+3] == alt_flag)) 
+		# 			or ((bds[4*x+1][4*y+1] == bds[4*x+2][4*y+2]) and (bds[4*x][4*y] == bds[4*x+3][4*y+3]) and (bds[4*x+1][4*y+1] == flag) and (not bds[4*x][4*y] == alt_flag))):
+		# 			score += 250
+		# 		if (((bds[4*x+3][4*y] == bds[4*x+2][4*y+1]) and (bds[4*x][4*y+3] == bds[4*x+1][4*y+2])  and (bds[4*x+3][4*y] == flag) and (not bds[4*x][4*y+3] == alt_flag))
+		# 			or ((bds[4*x+2][4*y+1] == bds[4*x+1][4*y+2]) and (bds[4*x+3][4*y] == bds[4*x][4*y+3]) and (bds[4*x][4*y+3]==flag) and (not bds[4*x+3][4*y] == alt_flag))):
+		# 			score += 250
+		# 		if (((bds[4*x+2][4*y+2] == bds[4*x+3][4*y+3]) and (bds[4*x][4*y] == bds[4*x+1][4*y+1]) and (bds[4*x+2][4*y+2] == flag) and (not bds[4*x][4*y] == alt_flag)) 
+		# 			or ((bds[4*x][4*y] == bds[4*x+3][4*y+3]) and (bds[4*x+1][4*y+1] == bds[4*x+2][4*y+2]) and (bds[4*x][4*y] == flag) and (not bds[4*x+1][4*y+1] == alt_flag))):
+		# 			score += 250
+		# 		if (((bds[4*x+1][4*y+2] == bds[4*x][4*y+3]) and (bds[4*x+2][4*y+1] == bds[4*x+3][4*y])  and (bds[4*x][4*y+3] == flag) and (not bds[4*x+2][4*y+1] == alt_flag))
+		# 			or ((bds[4*x+3][4*y] == bds[4*x+1][4*y+2]) and (bds[4*x+2][4*y+1]== bds[4*x][4*y+3]) and (bds[4*x+3][4*y] == flag) and (not bds[4*x+1][4*y+2] == alt_flag))):
+		# 			score += 250
+		# 		if (((bds[4*x][4*y] == bds[4*x+2][4*y+2]) and (bds[4*x+1][4*y+1] == bds[4*x+3][4*y+3]) and (bds[4*x+2][4*y+2] == flag) and (not bds[4*x+1][4*y+1] == alt_flag)) 
+		# 			or ((bds[4*x+1][4*y+1] == bds[4*x+3][4*y+3]) and (bds[4*x][4*y] == bds[4*x+2][4*y+2]) and (bds[4*x+3][4*y+3] == flag) and (not bds[4*x][4*y] == alt_flag))):
+		# 			score += 250
+		# 		if (((bds[4*x+3][4*y] == bds[4*x][4*y+3]) and (bds[4*x+1][4*y+2] == bds[4*x+1][4*y+2])  and (bds[4*x+3][4*y] == flag) and (not bds[4*x+1][4*y+2] == alt_flag))
+		# 			or ((bds[4*x+2][4*y+1] == bds[4*x][4*y+3]) and (bds[4*x+1][4*y+2]== bds[4*x+3][4*y+0]) and (bds[4*x][4*y+3] == flag) and (not bds[4*x+1][4*y+2] == alt_flag))):
+		# 			score += 250
             
             #checking for 2 continuous x/o in a column/row/diagonal of the block_status for max player
-			for i in range(4):
-				if  (((bs[i][0] == bs[i][1]) and (bs[i][3] == bs[i][2]) and (bs[i][0] == flag) and (not bs[i][3] == alt_flag)) or 
-					((bs[i][3] == bs[i][1]) and (bs[i][0] == bs[i][2]) and (bs[i][3] == flag) and (not bs[i][0] == alt_flag)) or
-					((bs[i][0] == bs[i][2]) and (bs[i][1] == bs[i][3]) and (bs[i][0] == flag) and (not bs[i][3] == alt_flag)) or
-					((bs[i][3] == bs[i][2]) and (bs[i][0] == bs[i][1]) and (bs[i][3] == flag) and (not bs[i][0] == alt_flag)) or
-					((bs[i][1] == bs[i][2]) and (bs[i][0] == bs[i][3]) and (bs[i][1] == flag) and (not bs[i][0] == alt_flag)) or
-					((bs[i][3] == bs[i][0]) and (bs[i][1] == bs[i][2]) and (bs[i][3] == flag) and (not bs[i][1] == alt_flag))):
+		for i in range(4):
+			if  (((bs[i][0] == bs[i][1]) and (bs[i][3] == bs[i][2]) and (bs[i][0] == flag) and (not bs[i][3] == alt_flag)) or 
+				((bs[i][3] == bs[i][1]) and (bs[i][0] == bs[i][2]) and (bs[i][3] == flag) and (not bs[i][0] == alt_flag)) or
+				((bs[i][0] == bs[i][2]) and (bs[i][1] == bs[i][3]) and (bs[i][0] == flag) and (not bs[i][3] == alt_flag)) or
+				((bs[i][3] == bs[i][2]) and (bs[i][0] == bs[i][1]) and (bs[i][3] == flag) and (not bs[i][0] == alt_flag)) or
+				((bs[i][1] == bs[i][2]) and (bs[i][0] == bs[i][3]) and (bs[i][1] == flag) and (not bs[i][0] == alt_flag)) or
+				((bs[i][3] == bs[i][0]) and (bs[i][1] == bs[i][2]) and (bs[i][3] == flag) and (not bs[i][1] == alt_flag))):
+				score += 400
+			if  (((bs[0][i] == bs[1][i]) and (bs[3][i] == bs[2][i]) and (bs[0][i] == flag) and (not bs[3][i] == alt_flag)) or 
+				((bs[3][i] == bs[1][i]) and (bs[0][i] == bs[2][i]) and (bs[3][i] == flag) and (not bs[0][i] == alt_flag)) or
+				((bs[0][i] == bs[2][i]) and (bs[1][i] == bs[3][i]) and (bs[0][i] == flag) and (not bs[3][i] == alt_flag)) or
+				((bs[3][i] == bs[2][i]) and (bs[0][i] == bs[1][i]) and (bs[3][i] == flag) and (not bs[0][i] == alt_flag)) or
+				((bs[1][i] == bs[2][i]) and (bs[0][i] == bs[3][i]) and (bs[1][i] == flag) and (not bs[0][i] == alt_flag)) or
+				((bs[3][i] == bs[0][i]) and (bs[1][i] == bs[2][i]) and (bs[3][i] == flag) and (not bs[1][i] == alt_flag))):
+				score += 400
+
+		if  (((bs[0][0] == bs[1][1]) and (bs[3][3] == bs[2][2]) and (bs[0][0] == flag) and (not bs[3][3] == alt_flag)) or 
+			((bs[3][3] == bs[1][1]) and (bs[0][0] == bs[i][2]) and (bs[3][3] == flag) and (not bs[0][0] == alt_flag)) or
+			((bs[1][1] == bs[2][2]) and (bs[3][3] == bs[0][0]) and (bs[1][1] == flag) and (not bs[3][3] == alt_flag)) or
+			((bs[3][3] == bs[2][2]) and (bs[0][0] == bs[1][1]) and (bs[3][3] == flag) and (not bs[0][0] == alt_flag)) or
+			((bs[0][0] == bs[2][2]) and (bs[1][1] == bs[3][3]) and (bs[0][0] == flag) and (not bs[3][3] == alt_flag)) or
+			((bs[3][3] == bs[0][0]) and (bs[1][1] == bs[1][2]) and (bs[3][3] == flag) and (not bs[1][1] == alt_flag))):
+				score += 500
+		if  (((bs[0][3] == bs[1][2]) and (bs[3][0] == bs[2][1]) and (bs[0][3] == flag) and (not bs[3][0] == alt_flag)) or 
+			((bs[3][0] == bs[1][2]) and (bs[0][3] == bs[2][1]) and (bs[3][0] == flag) and (not bs[0][3] == alt_flag)) or
+			((bs[0][3] == bs[2][1]) and (bs[1][2] == bs[3][0]) and (bs[0][3] == flag) and (not bs[3][0] == alt_flag)) or
+			((bs[3][0] == bs[2][1]) and (bs[0][3] == bs[1][2]) and (bs[3][0] == flag) and (not bs[0][3] == alt_flag)) or
+			((bs[1][2] == bs[2][1]) and (bs[0][3] == bs[3][0]) and (bs[1][2] == flag) and (not bs[0][3] == alt_flag)) or
+			((bs[3][0] == bs[0][3]) and (bs[1][2] == bs[2][1]) and (bs[3][0] == flag) and (not bs[1][2] == alt_flag))):
+				score += 500	
+		
+		#checking for 3 continuous x/o in a column/row/diagonal of the board_status for given max player
+		for x in range(4):
+			for y in range(4):
+				for i in range(4):
+					if (((bds[4*x+i][4*y] == bds[4*x+i][4*y+1] == bds[4*x+i][4*y+2]) and bds[4*x+i][4*y] == flag and (not bds[4*x+i][4*y+3] == alt_flag)) or ((bds[4*x+i][4*y+1] == bds[4*x+i][4*y+2] 
+						== bds[4*x+i][4*y+3]) and bds[4*x+i][4*y+1] == flag and (not bds[4*x+i][4*y] == alt_flag))):
+						score += 600
+					if (((bds[4*x][4*y+i] == bds[4*x+1][4*y+i] == bds[4*x+2][4*y+i]) and bds[4*x][4*y+i] == flag and (not bds[4*x+3][4*y+i] == alt_flag)) or ((bds[4*x+1][4*y+i] == bds[4*x+2][4*y+i]
+						== bds[4*x+3][4*y+i]) and bds[4*x+1][4*y+i] == flag and (not bds[4*x][4*y+i] == alt_flag))):
+						score += 600
+					if (((bds[4*x+i][4*y] == bds[4*x+i][4*y+1] == bds[4*x+i][4*y+3]) and bds[4*x+i][4*y] == flag and (not bds[4*x+i][4*y+2] == alt_flag)) or ((bds[4*x+i][4*y+0] == bds[4*x+i][4*y+2] 
+						== bds[4*x+i][4*y+3]) and bds[4*x+i][4*y] == flag and (not bds[4*x+i][4*y+1] == alt_flag))):
+						score += 600
+					if (((bds[4*x][4*y+i] == bds[4*x+1][4*y+i] == bds[4*x+3][4*y+i]) and bds[4*x][4*y+i] == flag and (not bds[4*x+2][4*y+i] == alt_flag)) or ((bds[4*x+0][4*y+i] == bds[4*x+2][4*y+i]
+						== bds[4*x+3][4*y+i]) and bds[4*x][4*y+i] == flag and (not bds[4*x+1][4*y+i] == alt_flag))):
+						score += 600
+				
+				if (((bds[4*x][4*y] == bds[4*x+1][4*y+1] == bds[4*x+2][4*y+2]) and (bds[4*x][4*y] == flag) and (not bds[4*x+3][4*y+3] == alt_flag)) 
+					or ((bds[4*x+1][4*y+1] == bds[4*x+2][4*y+2] == bds[4*x+3][4*y+3]) and (bds[4*x+1][4*y+1] == flag) and (not bds[4*x][4*y] == alt_flag))):
 					score += 400
-				if  (((bs[0][i] == bs[1][i]) and (bs[3][i] == bs[2][i]) and (bs[0][i] == flag) and (not bs[3][i] == alt_flag)) or 
-					((bs[3][i] == bs[1][i]) and (bs[0][i] == bs[2][i]) and (bs[3][i] == flag) and (not bs[0][i] == alt_flag)) or
-					((bs[0][i] == bs[2][i]) and (bs[1][i] == bs[3][i]) and (bs[0][i] == flag) and (not bs[3][i] == alt_flag)) or
-					((bs[3][i] == bs[2][i]) and (bs[0][i] == bs[1][i]) and (bs[3][i] == flag) and (not bs[0][i] == alt_flag)) or
-					((bs[1][i] == bs[2][i]) and (bs[0][i] == bs[3][i]) and (bs[1][i] == flag) and (not bs[0][i] == alt_flag)) or
-					((bs[3][i] == bs[0][i]) and (bs[1][i] == bs[2][i]) and (bs[3][i] == flag) and (not bs[1][i] == alt_flag))):
+				if (((bds[4*x+3][4*y] == bds[4*x+2][4*y+1] == bds[4*x+1][4*y+2])  and (bds[4*x+3][4*y] == flag) and (not bds[4*x][4*y+3] == alt_flag))
+					or ((bds[4*x+2][4*y+1] == bds[4*x+1][4*y+2] == bds[4*x][4*y+3]) and (bds[4*x][4*y+3]==flag) and (not bds[4*x+3][4*y] == alt_flag))):
+					score += 400
+				if (((bds[4*x][4*y] == bds[4*x+1][4*y+1] == bds[4*x+3][4*y+3]) and (bds[4*x][4*y] == flag) and (not bds[4*x+2][4*y+2] == alt_flag)) 
+					or ((bds[4*x][4*y] == bds[4*x+2][4*y+2] == bds[4*x+3][4*y+3]) and (bds[4*x][4*y] == flag) and (not bds[4*x+1][4*y+1] == alt_flag))):
+					score += 400
+				if (((bds[4*x+3][4*y] == bds[4*x+2][4*y+1] == bds[4*x][4*y+3])  and (bds[4*x+3][4*y] == flag) and (not bds[4*x+1][4*y+2] == alt_flag))
+					or ((bds[4*x+3][4*y] == bds[4*x+1][4*y+2] == bds[4*x][4*y+3]) and (bds[4*x][4*y+3] == flag) and (not bds[4*x+2][4*y+1] == alt_flag))):
 					score += 400
 
-			if  (((bs[0][0] == bs[1][1]) and (bs[3][3] == bs[2][2]) and (bs[0][0] == flag) and (not bs[3][3] == alt_flag)) or 
-				((bs[3][3] == bs[1][1]) and (bs[0][0] == bs[i][2]) and (bs[3][3] == flag) and (not bs[0][0] == alt_flag)) or
-				((bs[1][1] == bs[2][2]) and (bs[3][3] == bs[0][0]) and (bs[1][1] == flag) and (not bs[3][3] == alt_flag)) or
-				((bs[3][3] == bs[2][2]) and (bs[0][0] == bs[1][1]) and (bs[3][3] == flag) and (not bs[0][0] == alt_flag)) or
-				((bs[0][0] == bs[2][2]) and (bs[1][1] == bs[3][3]) and (bs[0][0] == flag) and (not bs[3][3] == alt_flag)) or
-				((bs[3][3] == bs[0][0]) and (bs[1][1] == bs[1][2]) and (bs[3][3] == flag) and (not bs[1][1] == alt_flag))):
-					score += 500
-			if  (((bs[0][3] == bs[1][2]) and (bs[3][0] == bs[2][1]) and (bs[0][3] == flag) and (not bs[3][0] == alt_flag)) or 
-				((bs[3][0] == bs[1][2]) and (bs[0][3] == bs[2][1]) and (bs[3][0] == flag) and (not bs[0][3] == alt_flag)) or
-				((bs[0][3] == bs[2][1]) and (bs[1][2] == bs[3][0]) and (bs[0][3] == flag) and (not bs[3][0] == alt_flag)) or
-				((bs[3][0] == bs[2][1]) and (bs[0][3] == bs[1][2]) and (bs[3][0] == flag) and (not bs[0][3] == alt_flag)) or
-				((bs[1][2] == bs[2][1]) and (bs[0][3] == bs[3][0]) and (bs[1][2] == flag) and (not bs[0][3] == alt_flag)) or
-				((bs[3][0] == bs[0][3]) and (bs[1][2] == bs[2][1]) and (bs[3][0] == flag) and (not bs[1][2] == alt_flag))):
-					score += 500	
-			
-			#checking for 3 continuous x/o in a column/row/diagonal of the board_status for given max player
-			for x in range(4):
-				for y in range(4):
-					for i in range(4):
-						if (((bds[4*x+i][4*y] == bds[4*x+i][4*y+1] == bds[4*x+i][4*y+2]) and bds[4*x+i][4*y] == flag and (not bds[4*x+i][4*y+3] == alt_flag)) or ((bds[4*x+i][4*y+1] == bds[4*x+i][4*y+2] 
-							== bds[4*x+i][4*y+3]) and bds[4*x+i][4*y+1] == flag and (not bds[4*x+i][4*y] == alt_flag))):
-							score += 600
-						if (((bds[4*x][4*y+i] == bds[4*x+1][4*y+i] == bds[4*x+2][4*y+i]) and bds[4*x][4*y+i] == flag and (not bds[4*x+3][4*y+i] == alt_flag)) or ((bds[4*x+1][4*y+i] == bds[4*x+2][4*y+i]
-							== bds[4*x+3][4*y+i]) and bds[4*x+1][4*y+i] == flag and (not bds[4*x][4*y+i] == alt_flag))):
-							score += 600
-						if (((bds[4*x+i][4*y] == bds[4*x+i][4*y+1] == bds[4*x+i][4*y+3]) and bds[4*x+i][4*y] == flag and (not bds[4*x+i][4*y+2] == alt_flag)) or ((bds[4*x+i][4*y+0] == bds[4*x+i][4*y+2] 
-							== bds[4*x+i][4*y+3]) and bds[4*x+i][4*y] == flag and (not bds[4*x+i][4*y+1] == alt_flag))):
-							score += 600
-						if (((bds[4*x][4*y+i] == bds[4*x+1][4*y+i] == bds[4*x+3][4*y+i]) and bds[4*x][4*y+i] == flag and (not bds[4*x+2][4*y+i] == alt_flag)) or ((bds[4*x+0][4*y+i] == bds[4*x+2][4*y+i]
-							== bds[4*x+3][4*y+i]) and bds[4*x][4*y+i] == flag and (not bds[4*x+1][4*y+i] == alt_flag))):
-							score += 600
-					
-					if (((bds[4*x][4*y] == bds[4*x+1][4*y+1] == bds[4*x+2][4*y+2]) and (bds[4*x][4*y] == flag) and (not bds[4*x+3][4*y+3] == alt_flag)) 
-						or ((bds[4*x+1][4*y+1] == bds[4*x+2][4*y+2] == bds[4*x+3][4*y+3]) and (bds[4*x+1][4*y+1] == flag) and (not bds[4*x][4*y] == alt_flag))):
-						score += 400
-					if (((bds[4*x+3][4*y] == bds[4*x+2][4*y+1] == bds[4*x+1][4*y+2])  and (bds[4*x+3][4*y] == flag) and (not bds[4*x][4*y+3] == alt_flag))
-						or ((bds[4*x+2][4*y+1] == bds[4*x+1][4*y+2] == bds[4*x][4*y+3]) and (bds[4*x][4*y+3]==flag) and (not bds[4*x+3][4*y] == alt_flag))):
-						score += 400
-					if (((bds[4*x][4*y] == bds[4*x+1][4*y+1] == bds[4*x+3][4*y+3]) and (bds[4*x][4*y] == flag) and (not bds[4*x+2][4*y+2] == alt_flag)) 
-						or ((bds[4*x][4*y] == bds[4*x+2][4*y+2] == bds[4*x+3][4*y+3]) and (bds[4*x][4*y] == flag) and (not bds[4*x+1][4*y+1] == alt_flag))):
-						score += 400
-					if (((bds[4*x+3][4*y] == bds[4*x+2][4*y+1] == bds[4*x][4*y+3])  and (bds[4*x+3][4*y] == flag) and (not bds[4*x+1][4*y+2] == alt_flag))
-						or ((bds[4*x+3][4*y] == bds[4*x+1][4*y+2] == bds[4*x][4*y+3]) and (bds[4*x][4*y+3] == flag) and (not bds[4*x+2][4*y+1] == alt_flag))):
-						score += 400
+		#checking for 3 continuous x/o in a column/row/diagonal of the block_status for max player
+		for i in range(4):
+			if  (((bs[i][0] == bs[i][1] == bs[i][2]) and (bs[i][0] == flag) and (not bs[i][3] == alt_flag)) or ((bs[i][3] == bs[i][1] == bs[i][2]) and (bs[i][3] == flag) 
+				and (not bs[i][0] == alt_flag))):
+				score += 800
+			if  (((bs[0][i] == bs[1][i] == bs[2][i]) and (bs[0][i] == flag) and (not bs[3][i] == alt_flag)) or ((bs[3][i] == bs[1][i] == bs[2][i]) and (bs[3][i] == flag) 
+				and (not bs[i][0] == alt_flag))):
+				score += 800
+			if  (((bs[i][0] == bs[i][1] == bs[i][3]) and (bs[i][0] == flag) and (not bs[i][2] == alt_flag)) or ((bs[i][3] == bs[i][0] == bs[i][2]) and (bs[i][3] == flag) 
+				and (not bs[i][1] == alt_flag))):
+				score += 800
+			if  (((bs[0][i] == bs[1][i] == bs[3][i]) and (bs[0][i] == flag) and (not bs[2][i] == alt_flag)) or ((bs[3][i] == bs[0][i] == bs[2][i]) and (bs[3][i] == flag) 
+				and (not bs[i][1] == alt_flag))):
+				score += 800
 
-			#checking for 3 continuous x/o in a column/row/diagonal of the block_status for max player
-			for i in range(4):
-				if  (((bs[i][0] == bs[i][1] == bs[i][2]) and (bs[i][0] == flag) and (not bs[i][3] == alt_flag)) or ((bs[i][3] == bs[i][1] == bs[i][2]) and (bs[i][3] == flag) 
-					and (not bs[i][0] == alt_flag))):
-					score += 800
-				if  (((bs[0][i] == bs[1][i] == bs[2][i]) and (bs[0][i] == flag) and (not bs[3][i] == alt_flag)) or ((bs[3][i] == bs[1][i] == bs[2][i]) and (bs[3][i] == flag) 
-					and (not bs[i][0] == alt_flag))):
-					score += 800
-				if  (((bs[i][0] == bs[i][1] == bs[i][3]) and (bs[i][0] == flag) and (not bs[i][2] == alt_flag)) or ((bs[i][3] == bs[i][0] == bs[i][2]) and (bs[i][3] == flag) 
-					and (not bs[i][1] == alt_flag))):
-					score += 800
-				if  (((bs[0][i] == bs[1][i] == bs[3][i]) and (bs[0][i] == flag) and (not bs[2][i] == alt_flag)) or ((bs[3][i] == bs[0][i] == bs[2][i]) and (bs[3][i] == flag) 
-					and (not bs[i][1] == alt_flag))):
-					score += 800
+		if (((bs[3][3] == bs[1][1] == bs[2][2]) and bs[3][3] == flag and (not bs[0][0] == alt_flag)) or ((bs[0][0] == bs[1][1] == bs[2][2]) and bs[0][0] == flag 
+			and (not bs[3][3] == alt_flag))):
+			score += 800
+		if (((bs[0][3] == bs[1][2] == bs[2][1]) and bs[0][3] == flag and (not bs[3][0] == alt_flag)) or ((bs[3][0] == bs[1][2] == bs[2][1]) and bs[3][0] == flag 
+			and (not bs[0][3] == alt_flag))):
+			score += 800
+		if (((bs[3][3] == bs[0][0] == bs[2][2]) and bs[3][3] == flag and (not bs[1][1] == alt_flag)) or ((bs[0][0] == bs[1][1] == bs[3][3]) and bs[0][0] == flag 
+			and (not bs[2][2] == alt_flag))):
+			score += 800
+		if (((bs[0][3] == bs[1][2] == bs[3][0]) and bs[0][3] == flag and (not bs[2][1] == alt_flag)) or ((bs[3][0] == bs[2][1] == bs[0][3]) and bs[3][0] == flag 
+			and (not bs[1][2] == alt_flag))):
+			score += 800	
 
-			if (((bs[3][3] == bs[1][1] == bs[2][2]) and bs[3][3] == flag and (not bs[0][0] == alt_flag)) or ((bs[0][0] == bs[1][1] == bs[2][2]) and bs[0][0] == flag 
-				and (not bs[3][3] == alt_flag))):
-				score += 800
-			if (((bs[0][3] == bs[1][2] == bs[2][1]) and bs[0][3] == flag and (not bs[3][0] == alt_flag)) or ((bs[3][0] == bs[1][2] == bs[2][1]) and bs[3][0] == flag 
-				and (not bs[0][3] == alt_flag))):
-				score += 800
-			if (((bs[3][3] == bs[0][0] == bs[2][2]) and bs[3][3] == flag and (not bs[1][1] == alt_flag)) or ((bs[0][0] == bs[1][1] == bs[3][3]) and bs[0][0] == flag 
-				and (not bs[2][2] == alt_flag))):
-				score += 800
-			if (((bs[0][3] == bs[1][2] == bs[3][0]) and bs[0][3] == flag and (not bs[2][1] == alt_flag)) or ((bs[3][0] == bs[2][1] == bs[0][3]) and bs[3][0] == flag 
-				and (not bs[1][2] == alt_flag))):
-				score += 800	
-		else:
-		#checking for 2 continuous x/o in a column/row/diagonal of the board_status for given min player
-			# for x in range(4):
-			# 	for y in range(4):
-			# 		for i in range(4):
-			# 			if (((bds[4*x+i][4*y] == bds[4*x+i][4*y+1]) and (bds[4*x+i][4*y+3] == bds[4*x+i][4*y+2]) and bds[4*x+i][4*y] == alt_flag and (not bds[4*x+i][4*y+3] == flag)) or 
-			# 				((bds[4*x+i][4*y+1] == bds[4*x+i][4*y+2]) and (bds[4*x+i][4*y] == bds[4*x+i][4*y+3]) and bds[4*x+i][4*y+1] == alt_flag and (not bds[4*x+i][4*y] == flag))):
-			# 				score -= 200
-			# 			if (((bds[4*x][4*y+i] == bds[4*x+1][4*y+i]) and (bds[4*x+3][4*y+i] == bds[4*x+2][4*y+i]) and bds[4*x][4*y+i] == alt_flag and (not bds[4*x+3][4*y+i] == flag)) or 
-			# 				((bds[4*x+1][4*y+i] == bds[4*x+2][4*y+i]) and (bds[4*x][4*y+i]== bds[4*x+3][4*y+i]) and bds[4*x+1][4*y+i] == alt_flag and (not bds[4*x][4*y+i] == flag))):
-			# 				score -= 200
-			# 			if (((bds[4*x+i][4*y] == bds[4*x+i][4*y+2]) and (bds[4*x+i][4*y+1] == bds[4*x+i][4*y+3]) and bds[4*x+i][4*y] == alt_flag and (not bds[4*x+i][4*y+3] == flag)) or 
-			# 				((bds[4*x+i][4*y+1] == bds[4*x+i][4*y+3]) and  (bds[4*x+i][4*y]== bds[4*x+i][4*y]) and bds[4*x+i][4*y+1] == alt_flag and (not bds[4*x+i][4*y+2] == flag))):
-			# 				score -= 200
-			# 			if (((bds[4*x][4*y+i] == bds[4*x+2][4*y+i]) and (bds[4*x+1][4*y+i] == bds[4*x+3][4*y+i]) and bds[4*x][4*y+i] == alt_flag and (not bds[4*x+3][4*y+i] == flag)) or 
-			# 				((bds[4*x+1][4*y+i] == bds[4*x+3][4*y+i]) and (bds[4*x][4*y+i]== bds[4*x+2][4*y+i]) and bds[4*x+1][4*y+i] == flag and (not bds[4*x][4*y+i] == flag))):
-			# 				score -= 200
-			# 			if (((bds[4*x+i][4*y] == bds[4*x+i][4*y+3]) and (bds[4*x+i][4*y+2] == bds[4*x+i][4*y+1]) and bds[4*x+i][4*y] == alt_flag and (not bds[4*x+i][4*y+2] == flag)) or 
-			# 				((bds[4*x+i][4*y+2] == bds[4*x+i][4*y+3]) and  (bds[4*x+i][4*y+1]== bds[4*x+i][4*y]) and bds[4*x+i][4*y+2] == alt_flag and (not bds[4*x+i][4*y+1] == flag))):
-			# 				score -= 200
-			# 			if (((bds[4*x][4*y+i] == bds[4*x+3][4*y+i]) and (bds[4*x+2][4*y+i] == bds[4*x+1][4*y+i]) and bds[4*x][4*y+i] == alt_flag and (not bds[4*x+2][4*y+i] == flag)) or 
-			# 				((bds[4*x+2][4*y+i] == bds[4*x+3][4*y+i]) and (bds[4*x+1][4*y+i]== bds[4*x][4*y+i]) and bds[4*x+2][4*y+i] == alt_flag and (not bds[4*x+1][4*y+i] == flag))):
-			# 				score -= 200
-					
-			# 		if (((bds[4*x][4*y] == bds[4*x+1][4*y+1]) and (bds[4*x+3][4*y+3] == bds[4*x+2][4*y+2]) and (bds[4*x][4*y] == alt_flag) and (not bds[4*x+3][4*y+3] == flag)) 
-			# 			or ((bds[4*x+1][4*y+1] == bds[4*x+2][4*y+2]) and (bds[4*x][4*y] == bds[4*x+3][4*y+3]) and (bds[4*x+1][4*y+1] == alt_flag) and (not bds[4*x][4*y] == flag))):
-			# 			score -= 250
-			# 		if (((bds[4*x+3][4*y] == bds[4*x+2][4*y+1]) and (bds[4*x][4*y+3] == bds[4*x+1][4*y+2])  and (bds[4*x+3][4*y] == alt_flag) and (not bds[4*x][4*y+3] == flag))
-			# 			or ((bds[4*x+2][4*y+1] == bds[4*x+1][4*y+2]) and (bds[4*x+3][4*y] == bds[4*x][4*y+3]) and (bds[4*x][4*y+3]==alt_flag) and (not bds[4*x+3][4*y] == flag))):
-			# 			score -= 250
-			# 		if (((bds[4*x+2][4*y+2] == bds[4*x+3][4*y+3]) and (bds[4*x][4*y] == bds[4*x+1][4*y+1]) and (bds[4*x+2][4*y+2] == alt_flag) and (not bds[4*x][4*y] == flag)) 
-			# 			or ((bds[4*x][4*y] == bds[4*x+3][4*y+3]) and (bds[4*x+1][4*y+1] == bds[4*x+2][4*y+2]) and (bds[4*x][4*y] == alt_flag) and (not bds[4*x+1][4*y+1] == flag))):
-			# 			score -= 250
-			# 		if (((bds[4*x+1][4*y+2] == bds[4*x][4*y+3]) and (bds[4*x+2][4*y+1] == bds[4*x+3][4*y])  and (bds[4*x][4*y+3] == alt_flag) and (not bds[4*x+2][4*y+1] == flag))
-			# 			or ((bds[4*x+3][4*y] == bds[4*x+1][4*y+2]) and (bds[4*x+2][4*y+1]== bds[4*x][4*y+3]) and (bds[4*x+3][4*y] == alt_flag) and (not bds[4*x+1][4*y+2] == flag))):
-			# 			score -= 250
-			# 		if (((bds[4*x][4*y] == bds[4*x+2][4*y+2]) and (bds[4*x+1][4*y+1] == bds[4*x+3][4*y+3]) and (bds[4*x+2][4*y+2] == alt_flag) and (not bds[4*x+1][4*y+1] == flag)) 
-			# 			or ((bds[4*x+1][4*y+1] == bds[4*x+3][4*y+3]) and (bds[4*x][4*y] == bds[4*x+2][4*y+2]) and (bds[4*x+3][4*y+3] == alt_flag) and (not bds[4*x][4*y] == flag))):
-			# 			score -= 250
-			# 		if (((bds[4*x+3][4*y] == bds[4*x][4*y+3]) and (bds[4*x+1][4*y+2] == bds[4*x+1][4*y+2])  and (bds[4*x+3][4*y] == alt_flag) and (not bds[4*x+1][4*y+2] == flag))
-			# 			or ((bds[4*x+2][4*y+1] == bds[4*x][4*y+3]) and (bds[4*x+1][4*y+2]== bds[4*x+3][4*y+0]) and (bds[4*x][4*y+3] == alt_flag) and (not bds[4*x+1][4*y+2] == flag))):
-			# 			score -= 250
+	#checking for 2 continuous x/o in a column/row/diagonal of the board_status for given min player
+		# for x in range(4):
+		# 	for y in range(4):
+		# 		for i in range(4):
+		# 			if (((bds[4*x+i][4*y] == bds[4*x+i][4*y+1]) and (bds[4*x+i][4*y+3] == bds[4*x+i][4*y+2]) and bds[4*x+i][4*y] == alt_flag and (not bds[4*x+i][4*y+3] == flag)) or 
+		# 				((bds[4*x+i][4*y+1] == bds[4*x+i][4*y+2]) and (bds[4*x+i][4*y] == bds[4*x+i][4*y+3]) and bds[4*x+i][4*y+1] == alt_flag and (not bds[4*x+i][4*y] == flag))):
+		# 				score -= 200
+		# 			if (((bds[4*x][4*y+i] == bds[4*x+1][4*y+i]) and (bds[4*x+3][4*y+i] == bds[4*x+2][4*y+i]) and bds[4*x][4*y+i] == alt_flag and (not bds[4*x+3][4*y+i] == flag)) or 
+		# 				((bds[4*x+1][4*y+i] == bds[4*x+2][4*y+i]) and (bds[4*x][4*y+i]== bds[4*x+3][4*y+i]) and bds[4*x+1][4*y+i] == alt_flag and (not bds[4*x][4*y+i] == flag))):
+		# 				score -= 200
+		# 			if (((bds[4*x+i][4*y] == bds[4*x+i][4*y+2]) and (bds[4*x+i][4*y+1] == bds[4*x+i][4*y+3]) and bds[4*x+i][4*y] == alt_flag and (not bds[4*x+i][4*y+3] == flag)) or 
+		# 				((bds[4*x+i][4*y+1] == bds[4*x+i][4*y+3]) and  (bds[4*x+i][4*y]== bds[4*x+i][4*y]) and bds[4*x+i][4*y+1] == alt_flag and (not bds[4*x+i][4*y+2] == flag))):
+		# 				score -= 200
+		# 			if (((bds[4*x][4*y+i] == bds[4*x+2][4*y+i]) and (bds[4*x+1][4*y+i] == bds[4*x+3][4*y+i]) and bds[4*x][4*y+i] == alt_flag and (not bds[4*x+3][4*y+i] == flag)) or 
+		# 				((bds[4*x+1][4*y+i] == bds[4*x+3][4*y+i]) and (bds[4*x][4*y+i]== bds[4*x+2][4*y+i]) and bds[4*x+1][4*y+i] == flag and (not bds[4*x][4*y+i] == flag))):
+		# 				score -= 200
+		# 			if (((bds[4*x+i][4*y] == bds[4*x+i][4*y+3]) and (bds[4*x+i][4*y+2] == bds[4*x+i][4*y+1]) and bds[4*x+i][4*y] == alt_flag and (not bds[4*x+i][4*y+2] == flag)) or 
+		# 				((bds[4*x+i][4*y+2] == bds[4*x+i][4*y+3]) and  (bds[4*x+i][4*y+1]== bds[4*x+i][4*y]) and bds[4*x+i][4*y+2] == alt_flag and (not bds[4*x+i][4*y+1] == flag))):
+		# 				score -= 200
+		# 			if (((bds[4*x][4*y+i] == bds[4*x+3][4*y+i]) and (bds[4*x+2][4*y+i] == bds[4*x+1][4*y+i]) and bds[4*x][4*y+i] == alt_flag and (not bds[4*x+2][4*y+i] == flag)) or 
+		# 				((bds[4*x+2][4*y+i] == bds[4*x+3][4*y+i]) and (bds[4*x+1][4*y+i]== bds[4*x][4*y+i]) and bds[4*x+2][4*y+i] == alt_flag and (not bds[4*x+1][4*y+i] == flag))):
+		# 				score -= 200
+				
+		# 		if (((bds[4*x][4*y] == bds[4*x+1][4*y+1]) and (bds[4*x+3][4*y+3] == bds[4*x+2][4*y+2]) and (bds[4*x][4*y] == alt_flag) and (not bds[4*x+3][4*y+3] == flag)) 
+		# 			or ((bds[4*x+1][4*y+1] == bds[4*x+2][4*y+2]) and (bds[4*x][4*y] == bds[4*x+3][4*y+3]) and (bds[4*x+1][4*y+1] == alt_flag) and (not bds[4*x][4*y] == flag))):
+		# 			score -= 250
+		# 		if (((bds[4*x+3][4*y] == bds[4*x+2][4*y+1]) and (bds[4*x][4*y+3] == bds[4*x+1][4*y+2])  and (bds[4*x+3][4*y] == alt_flag) and (not bds[4*x][4*y+3] == flag))
+		# 			or ((bds[4*x+2][4*y+1] == bds[4*x+1][4*y+2]) and (bds[4*x+3][4*y] == bds[4*x][4*y+3]) and (bds[4*x][4*y+3]==alt_flag) and (not bds[4*x+3][4*y] == flag))):
+		# 			score -= 250
+		# 		if (((bds[4*x+2][4*y+2] == bds[4*x+3][4*y+3]) and (bds[4*x][4*y] == bds[4*x+1][4*y+1]) and (bds[4*x+2][4*y+2] == alt_flag) and (not bds[4*x][4*y] == flag)) 
+		# 			or ((bds[4*x][4*y] == bds[4*x+3][4*y+3]) and (bds[4*x+1][4*y+1] == bds[4*x+2][4*y+2]) and (bds[4*x][4*y] == alt_flag) and (not bds[4*x+1][4*y+1] == flag))):
+		# 			score -= 250
+		# 		if (((bds[4*x+1][4*y+2] == bds[4*x][4*y+3]) and (bds[4*x+2][4*y+1] == bds[4*x+3][4*y])  and (bds[4*x][4*y+3] == alt_flag) and (not bds[4*x+2][4*y+1] == flag))
+		# 			or ((bds[4*x+3][4*y] == bds[4*x+1][4*y+2]) and (bds[4*x+2][4*y+1]== bds[4*x][4*y+3]) and (bds[4*x+3][4*y] == alt_flag) and (not bds[4*x+1][4*y+2] == flag))):
+		# 			score -= 250
+		# 		if (((bds[4*x][4*y] == bds[4*x+2][4*y+2]) and (bds[4*x+1][4*y+1] == bds[4*x+3][4*y+3]) and (bds[4*x+2][4*y+2] == alt_flag) and (not bds[4*x+1][4*y+1] == flag)) 
+		# 			or ((bds[4*x+1][4*y+1] == bds[4*x+3][4*y+3]) and (bds[4*x][4*y] == bds[4*x+2][4*y+2]) and (bds[4*x+3][4*y+3] == alt_flag) and (not bds[4*x][4*y] == flag))):
+		# 			score -= 250
+		# 		if (((bds[4*x+3][4*y] == bds[4*x][4*y+3]) and (bds[4*x+1][4*y+2] == bds[4*x+1][4*y+2])  and (bds[4*x+3][4*y] == alt_flag) and (not bds[4*x+1][4*y+2] == flag))
+		# 			or ((bds[4*x+2][4*y+1] == bds[4*x][4*y+3]) and (bds[4*x+1][4*y+2]== bds[4*x+3][4*y+0]) and (bds[4*x][4*y+3] == alt_flag) and (not bds[4*x+1][4*y+2] == flag))):
+		# 			score -= 250
 
 #checking for 2 continuous x/o in a column/row/diagonal of the block_status for min player
-			for i in range(4):
-				if  (((bs[i][0] == bs[i][1]) and (bs[i][3] == bs[i][2]) and (bs[i][0] == alt_flag) and (not bs[i][3] == flag)) or 
-					((bs[i][3] == bs[i][1]) and (bs[i][0] == bs[i][2]) and (bs[i][3] == alt_flag) and (not bs[i][0] == flag)) or
-					((bs[i][0] == bs[i][2]) and (bs[i][1] == bs[i][3]) and (bs[i][0] == alt_flag) and (not bs[i][3] == flag)) or
-					((bs[i][3] == bs[i][2]) and (bs[i][0] == bs[i][1]) and (bs[i][3] == alt_flag) and (not bs[i][0] == flag)) or
-					((bs[i][1] == bs[i][2]) and (bs[i][0] == bs[i][3]) and (bs[i][1] == alt_flag) and (not bs[i][0] == flag)) or
-					((bs[i][3] == bs[i][0]) and (bs[i][1] == bs[i][2]) and (bs[i][3] == alt_flag) and (not bs[i][1] == flag))):
+		for i in range(4):
+			if  (((bs[i][0] == bs[i][1]) and (bs[i][3] == bs[i][2]) and (bs[i][0] == alt_flag) and (not bs[i][3] == flag)) or 
+				((bs[i][3] == bs[i][1]) and (bs[i][0] == bs[i][2]) and (bs[i][3] == alt_flag) and (not bs[i][0] == flag)) or
+				((bs[i][0] == bs[i][2]) and (bs[i][1] == bs[i][3]) and (bs[i][0] == alt_flag) and (not bs[i][3] == flag)) or
+				((bs[i][3] == bs[i][2]) and (bs[i][0] == bs[i][1]) and (bs[i][3] == alt_flag) and (not bs[i][0] == flag)) or
+				((bs[i][1] == bs[i][2]) and (bs[i][0] == bs[i][3]) and (bs[i][1] == alt_flag) and (not bs[i][0] == flag)) or
+				((bs[i][3] == bs[i][0]) and (bs[i][1] == bs[i][2]) and (bs[i][3] == alt_flag) and (not bs[i][1] == flag))):
+				score -= 400
+			if  (((bs[0][i] == bs[1][i]) and (bs[3][i] == bs[2][i]) and (bs[0][i] == alt_flag) and (not bs[3][i] == flag)) or 
+				((bs[3][i] == bs[1][i]) and (bs[0][i] == bs[2][i]) and (bs[3][i] == alt_flag) and (not bs[0][i] == flag)) or
+				((bs[0][i] == bs[2][i]) and (bs[1][i] == bs[3][i]) and (bs[0][i] == alt_flag) and (not bs[3][i] == flag)) or
+				((bs[3][i] == bs[2][i]) and (bs[0][i] == bs[1][i]) and (bs[3][i] == alt_flag) and (not bs[0][i] == flag)) or
+				((bs[1][i] == bs[2][i]) and (bs[0][i] == bs[3][i]) and (bs[1][i] == alt_flag) and (not bs[0][i] == flag)) or
+				((bs[3][i] == bs[0][i]) and (bs[1][i] == bs[2][i]) and (bs[3][i] == alt_flag) and (not bs[1][i] == flag))):
+				score -= 400
+
+		if  (((bs[0][0] == bs[1][1]) and (bs[3][3] == bs[2][2]) and (bs[0][0] == alt_flag) and (not bs[3][3] == flag)) or 
+			((bs[3][3] == bs[1][1]) and (bs[0][0] == bs[i][2]) and (bs[3][3] == alt_flag) and (not bs[0][0] == flag)) or
+			((bs[1][1] == bs[2][2]) and (bs[3][3] == bs[0][0]) and (bs[1][1] == alt_flag) and (not bs[3][3] == flag)) or
+			((bs[3][3] == bs[2][2]) and (bs[0][0] == bs[1][1]) and (bs[3][3] == alt_flag) and (not bs[0][0] == flag)) or
+			((bs[0][0] == bs[2][2]) and (bs[1][1] == bs[3][3]) and (bs[0][0] == alt_flag) and (not bs[3][3] == flag)) or
+			((bs[3][3] == bs[0][0]) and (bs[1][1] == bs[1][2]) and (bs[3][3] == alt_flag) and (not bs[1][1] == flag))):
+				score -= 500
+		if  (((bs[0][3] == bs[1][2]) and (bs[3][0] == bs[2][1]) and (bs[0][3] == alt_flag) and (not bs[3][0] == flag)) or 
+			((bs[3][0] == bs[1][2]) and (bs[0][3] == bs[2][1]) and (bs[3][0] == alt_flag) and (not bs[0][3] == flag)) or
+			((bs[0][3] == bs[2][1]) and (bs[1][2] == bs[3][0]) and (bs[0][3] == alt_flag) and (not bs[3][0] == flag)) or
+			((bs[3][0] == bs[2][1]) and (bs[0][3] == bs[1][2]) and (bs[3][0] == alt_flag) and (not bs[0][3] == flag)) or
+			((bs[1][2] == bs[2][1]) and (bs[0][3] == bs[3][0]) and (bs[1][2] == alt_flag) and (not bs[0][3] == flag)) or
+			((bs[3][0] == bs[0][3]) and (bs[1][2] == bs[2][1]) and (bs[3][0] == alt_flag) and (not bs[1][2] == flag))):
+				score -= 500		
+		#checking for 3 continuous x/o in a column/row/diagonal of the board_status for given min player
+		for x in range(4):
+			for y in range(4):
+				for i in range(4):
+					if (((bds[4*x+i][4*y] == bds[4*x+i][4*y+1] == bds[4*x+i][4*y+2]) and bds[4*x+i][4*y] == alt_flag and (not bds[4*x+i][4*y+3] == flag)) or ((bds[4*x+i][4*y+1] == bds[4*x+i][4*y+2] 
+						== bds[4*x+i][4*y+3]) and bds[4*x+i][4*y+1] == alt_flag and (not bds[4*x+i][4*y] == flag))):
+						score -= 600
+					if (((bds[4*x][4*y+i] == bds[4*x+1][4*y+i] == bds[4*x+2][4*y+i]) and bds[4*x][4*y+i] == alt_flag and (not bds[4*x+3][4*y+i] == flag)) or ((bds[4*x+1][4*y+i] == bds[4*x+2][4*y+i]
+						== bds[4*x+3][4*y+i]) and bds[4*x+1][4*y+i] == alt_flag and (not bds[4*x][4*y+i] == flag))):
+						score -= 600
+					if (((bds[4*x+i][4*y] == bds[4*x+i][4*y+1] == bds[4*x+i][4*y+3]) and bds[4*x+i][4*y] == alt_flag and (not bds[4*x+i][4*y+2] == flag)) or ((bds[4*x+i][4*y+0] == bds[4*x+i][4*y+2] 
+						== bds[4*x+i][4*y+3]) and bds[4*x+i][4*y] == alt_flag and (not bds[4*x+i][4*y+1] == flag))):
+						score -= 600
+					if (((bds[4*x][4*y+i] == bds[4*x+1][4*y+i] == bds[4*x+3][4*y+i]) and bds[4*x][4*y+i] == alt_flag and (not bds[4*x+2][4*y+i] == flag)) or ((bds[4*x+0][4*y+i] == bds[4*x+2][4*y+i]
+						== bds[4*x+3][4*y+i]) and bds[4*x][4*y+i] == alt_flag and (not bds[4*x+1][4*y+i] == flag))):
+						score -= 600
+				
+				if (((bds[4*x][4*y] == bds[4*x+1][4*y+1] == bds[4*x+2][4*y+2]) and (bds[4*x][4*y] == alt_flag) and (not bds[4*x+3][4*y+3] == flag)) 
+					or ((bds[4*x+1][4*y+1] == bds[4*x+2][4*y+2] == bds[4*x+3][4*y+3]) and (bds[4*x+1][4*y+1] == alt_flag) and (not bds[4*x][4*y] == flag))):
 					score -= 400
-				if  (((bs[0][i] == bs[1][i]) and (bs[3][i] == bs[2][i]) and (bs[0][i] == alt_flag) and (not bs[3][i] == flag)) or 
-					((bs[3][i] == bs[1][i]) and (bs[0][i] == bs[2][i]) and (bs[3][i] == alt_flag) and (not bs[0][i] == flag)) or
-					((bs[0][i] == bs[2][i]) and (bs[1][i] == bs[3][i]) and (bs[0][i] == alt_flag) and (not bs[3][i] == flag)) or
-					((bs[3][i] == bs[2][i]) and (bs[0][i] == bs[1][i]) and (bs[3][i] == alt_flag) and (not bs[0][i] == flag)) or
-					((bs[1][i] == bs[2][i]) and (bs[0][i] == bs[3][i]) and (bs[1][i] == alt_flag) and (not bs[0][i] == flag)) or
-					((bs[3][i] == bs[0][i]) and (bs[1][i] == bs[2][i]) and (bs[3][i] == alt_flag) and (not bs[1][i] == flag))):
+				if (((bds[4*x+3][4*y] == bds[4*x+2][4*y+1] == bds[4*x+1][4*y+2])  and (bds[4*x+3][4*y] == alt_flag) and (not bds[4*x][4*y+3] == flag))
+					or ((bds[4*x+2][4*y+1] == bds[4*x+1][4*y+2] == bds[4*x+3][4*y]) and (bds[4*x][4*y+3] == alt_flag) and (not bds[4*x+3][4*y] == flag))):
+					score -= 400
+				if (((bds[4*x][4*y] == bds[4*x+1][4*y+1] == bds[4*x+3][4*y+3]) and (bds[4*x][4*y] == alt_flag) and (not bds[4*x+2][4*y+2] == flag)) 
+					or ((bds[4*x][4*y] == bds[4*x+2][4*y+2] == bds[4*x+3][4*y+3]) and (bds[4*x][4*y] == alt_flag) and (not bds[4*x+1][4*y+1] == flag))):
+					score -= 400
+				if (((bds[4*x+3][4*y] == bds[4*x+2][4*y+1] == bds[4*x][4*y+3])  and (bds[4*x+3][4*y] == alt_flag) and (not bds[4*x+1][4*y+2] == flag))
+					or ((bds[4*x+3][4*y] == bds[4*x+1][4*y+2] == bds[4*x][4*y+3]) and (bds[4*x][4*y+3] == alt_flag) and (not bds[4*x+2][4*y+1] == flag))):
 					score -= 400
 
-			if  (((bs[0][0] == bs[1][1]) and (bs[3][3] == bs[2][2]) and (bs[0][0] == alt_flag) and (not bs[3][3] == flag)) or 
-				((bs[3][3] == bs[1][1]) and (bs[0][0] == bs[i][2]) and (bs[3][3] == alt_flag) and (not bs[0][0] == flag)) or
-				((bs[1][1] == bs[2][2]) and (bs[3][3] == bs[0][0]) and (bs[1][1] == alt_flag) and (not bs[3][3] == flag)) or
-				((bs[3][3] == bs[2][2]) and (bs[0][0] == bs[1][1]) and (bs[3][3] == alt_flag) and (not bs[0][0] == flag)) or
-				((bs[0][0] == bs[2][2]) and (bs[1][1] == bs[3][3]) and (bs[0][0] == alt_flag) and (not bs[3][3] == flag)) or
-				((bs[3][3] == bs[0][0]) and (bs[1][1] == bs[1][2]) and (bs[3][3] == alt_flag) and (not bs[1][1] == flag))):
-					score -= 500
-			if  (((bs[0][3] == bs[1][2]) and (bs[3][0] == bs[2][1]) and (bs[0][3] == alt_flag) and (not bs[3][0] == flag)) or 
-				((bs[3][0] == bs[1][2]) and (bs[0][3] == bs[2][1]) and (bs[3][0] == alt_flag) and (not bs[0][3] == flag)) or
-				((bs[0][3] == bs[2][1]) and (bs[1][2] == bs[3][0]) and (bs[0][3] == alt_flag) and (not bs[3][0] == flag)) or
-				((bs[3][0] == bs[2][1]) and (bs[0][3] == bs[1][2]) and (bs[3][0] == alt_flag) and (not bs[0][3] == flag)) or
-				((bs[1][2] == bs[2][1]) and (bs[0][3] == bs[3][0]) and (bs[1][2] == alt_flag) and (not bs[0][3] == flag)) or
-				((bs[3][0] == bs[0][3]) and (bs[1][2] == bs[2][1]) and (bs[3][0] == alt_flag) and (not bs[1][2] == flag))):
-					score -= 500		
-			#checking for 3 continuous x/o in a column/row/diagonal of the board_status for given min player
-			for x in range(4):
-				for y in range(4):
-					for i in range(4):
-						if (((bds[4*x+i][4*y] == bds[4*x+i][4*y+1] == bds[4*x+i][4*y+2]) and bds[4*x+i][4*y] == alt_flag and (not bds[4*x+i][4*y+3] == flag)) or ((bds[4*x+i][4*y+1] == bds[4*x+i][4*y+2] 
-							== bds[4*x+i][4*y+3]) and bds[4*x+i][4*y+1] == alt_flag and (not bds[4*x+i][4*y] == flag))):
-							score -= 600
-						if (((bds[4*x][4*y+i] == bds[4*x+1][4*y+i] == bds[4*x+2][4*y+i]) and bds[4*x][4*y+i] == alt_flag and (not bds[4*x+3][4*y+i] == flag)) or ((bds[4*x+1][4*y+i] == bds[4*x+2][4*y+i]
-							== bds[4*x+3][4*y+i]) and bds[4*x+1][4*y+i] == alt_flag and (not bds[4*x][4*y+i] == flag))):
-							score -= 600
-						if (((bds[4*x+i][4*y] == bds[4*x+i][4*y+1] == bds[4*x+i][4*y+3]) and bds[4*x+i][4*y] == alt_flag and (not bds[4*x+i][4*y+2] == flag)) or ((bds[4*x+i][4*y+0] == bds[4*x+i][4*y+2] 
-							== bds[4*x+i][4*y+3]) and bds[4*x+i][4*y] == alt_flag and (not bds[4*x+i][4*y+1] == flag))):
-							score -= 600
-						if (((bds[4*x][4*y+i] == bds[4*x+1][4*y+i] == bds[4*x+3][4*y+i]) and bds[4*x][4*y+i] == alt_flag and (not bds[4*x+2][4*y+i] == flag)) or ((bds[4*x+0][4*y+i] == bds[4*x+2][4*y+i]
-							== bds[4*x+3][4*y+i]) and bds[4*x][4*y+i] == alt_flag and (not bds[4*x+1][4*y+i] == flag))):
-							score -= 600
-					
-					if (((bds[4*x][4*y] == bds[4*x+1][4*y+1] == bds[4*x+2][4*y+2]) and (bds[4*x][4*y] == alt_flag) and (not bds[4*x+3][4*y+3] == flag)) 
-						or ((bds[4*x+1][4*y+1] == bds[4*x+2][4*y+2] == bds[4*x+3][4*y+3]) and (bds[4*x+1][4*y+1] == alt_flag) and (not bds[4*x][4*y] == flag))):
-						score -= 400
-					if (((bds[4*x+3][4*y] == bds[4*x+2][4*y+1] == bds[4*x+1][4*y+2])  and (bds[4*x+3][4*y] == alt_flag) and (not bds[4*x][4*y+3] == flag))
-						or ((bds[4*x+2][4*y+1] == bds[4*x+1][4*y+2] == bds[4*x+3][4*y]) and (bds[4*x][4*y+3] == alt_flag) and (not bds[4*x+3][4*y] == flag))):
-						score -= 400
-					if (((bds[4*x][4*y] == bds[4*x+1][4*y+1] == bds[4*x+3][4*y+3]) and (bds[4*x][4*y] == alt_flag) and (not bds[4*x+2][4*y+2] == flag)) 
-						or ((bds[4*x][4*y] == bds[4*x+2][4*y+2] == bds[4*x+3][4*y+3]) and (bds[4*x][4*y] == alt_flag) and (not bds[4*x+1][4*y+1] == flag))):
-						score -= 400
-					if (((bds[4*x+3][4*y] == bds[4*x+2][4*y+1] == bds[4*x][4*y+3])  and (bds[4*x+3][4*y] == alt_flag) and (not bds[4*x+1][4*y+2] == flag))
-						or ((bds[4*x+3][4*y] == bds[4*x+1][4*y+2] == bds[4*x][4*y+3]) and (bds[4*x][4*y+3] == alt_flag) and (not bds[4*x+2][4*y+1] == flag))):
-						score -= 400
+		#checking for 3 continuous x/o in a column/row/diagonal of the block_status for min player
+		for i in range(4):
+			if  (((bs[i][0] == bs[i][1] == bs[i][2]) and (bs[i][0] == alt_flag) and (not bs[i][3] == flag)) or ((bs[i][3] == bs[i][1] == bs[i][2]) and (bs[i][3] == alt_flag) 
+				and (not bs[i][0] == flag))):
+				score -= 800
+			if  (((bs[0][i] == bs[1][i] == bs[2][i]) and (bs[0][i] == alt_flag) and (not bs[3][i] == flag)) or ((bs[3][i] == bs[1][i] == bs[2][i]) and (bs[3][i] == alt_flag) 
+				and (not bs[i][0] == flag))):
+				score -= 800
+			if  (((bs[i][0] == bs[i][1] == bs[i][3]) and (bs[i][0] == alt_flag) and (not bs[i][2] == flag)) or ((bs[i][3] == bs[i][0] == bs[i][2]) and (bs[i][3] == alt_flag) 
+				and (not bs[i][1] == flag))):
+				score -= 800
+			if  (((bs[0][i] == bs[1][i] == bs[3][i]) and (bs[0][i] == alt_flag) and (not bs[2][i] == flag)) or ((bs[3][i] == bs[0][i] == bs[2][i]) and (bs[3][i] == alt_flag) 
+				and (not bs[i][1] == flag))):
+				score -= 800
 
-			#checking for 3 continuous x/o in a column/row/diagonal of the block_status for min player
-			for i in range(4):
-				if  (((bs[i][0] == bs[i][1] == bs[i][2]) and (bs[i][0] == alt_flag) and (not bs[i][3] == flag)) or ((bs[i][3] == bs[i][1] == bs[i][2]) and (bs[i][3] == alt_flag) 
-					and (not bs[i][0] == flag))):
-					score -= 800
-				if  (((bs[0][i] == bs[1][i] == bs[2][i]) and (bs[0][i] == alt_flag) and (not bs[3][i] == flag)) or ((bs[3][i] == bs[1][i] == bs[2][i]) and (bs[3][i] == alt_flag) 
-					and (not bs[i][0] == flag))):
-					score -= 800
-				if  (((bs[i][0] == bs[i][1] == bs[i][3]) and (bs[i][0] == alt_flag) and (not bs[i][2] == flag)) or ((bs[i][3] == bs[i][0] == bs[i][2]) and (bs[i][3] == alt_flag) 
-					and (not bs[i][1] == flag))):
-					score -= 800
-				if  (((bs[0][i] == bs[1][i] == bs[3][i]) and (bs[0][i] == alt_flag) and (not bs[2][i] == flag)) or ((bs[3][i] == bs[0][i] == bs[2][i]) and (bs[3][i] == alt_flag) 
-					and (not bs[i][1] == flag))):
-					score -= 800
-
-			if (((bs[3][3] == bs[1][1] == bs[2][2]) and bs[3][3] == alt_flag and (not bs[0][0] == flag)) or ((bs[0][0] == bs[1][1] == bs[2][2]) and bs[0][0] == alt_flag 
-				and (not bs[3][3] == flag))):
-				score -= 800
-			if (((bs[0][3] == bs[1][2] == bs[2][1]) and bs[0][3] == alt_flag and (not bs[3][0] == flag)) or ((bs[3][0] == bs[1][2] == bs[2][1]) and bs[3][0] == alt_flag 
-				and (not bs[0][3] == flag))):
-				score -= 800
-			if (((bs[3][3] == bs[0][0] == bs[2][2]) and bs[3][3] == alt_flag and (not bs[1][1] == flag)) or ((bs[0][0] == bs[1][1] == bs[3][3]) and bs[0][0] == alt_flag 
-				and (not bs[2][2] == flag))):
-				score -= 800
-			if (((bs[0][3] == bs[1][2] == bs[3][0]) and bs[0][3] == alt_flag and (not bs[2][1] == flag)) or ((bs[3][0] == bs[2][1] == bs[0][3]) and bs[3][0] == alt_flag 
-				and (not bs[1][2] == flag))):
-				score -= 800
+		if (((bs[3][3] == bs[1][1] == bs[2][2]) and bs[3][3] == alt_flag and (not bs[0][0] == flag)) or ((bs[0][0] == bs[1][1] == bs[2][2]) and bs[0][0] == alt_flag 
+			and (not bs[3][3] == flag))):
+			score -= 800
+		if (((bs[0][3] == bs[1][2] == bs[2][1]) and bs[0][3] == alt_flag and (not bs[3][0] == flag)) or ((bs[3][0] == bs[1][2] == bs[2][1]) and bs[3][0] == alt_flag 
+			and (not bs[0][3] == flag))):
+			score -= 800
+		if (((bs[3][3] == bs[0][0] == bs[2][2]) and bs[3][3] == alt_flag and (not bs[1][1] == flag)) or ((bs[0][0] == bs[1][1] == bs[3][3]) and bs[0][0] == alt_flag 
+			and (not bs[2][2] == flag))):
+			score -= 800
+		if (((bs[0][3] == bs[1][2] == bs[3][0]) and bs[0][3] == alt_flag and (not bs[2][1] == flag)) or ((bs[3][0] == bs[2][1] == bs[0][3]) and bs[3][0] == alt_flag 
+			and (not bs[1][2] == flag))):
+			score -= 800
 			
 		#print score
 		return score
