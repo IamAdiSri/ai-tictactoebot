@@ -6,10 +6,6 @@ import time
 import copy
 import vta
 from team52 import Player52
-from team52_legacy import Player52_legacy
-from aiBot9_check import aiBot
-from team52_arjun import Player52 as arjun
-import atv 
 
 class TimedOutExc(Exception):
 	pass
@@ -126,16 +122,10 @@ class Board:
 	def check_valid_move(self, old_move, new_move):
 		#checks if a move is valid or not given the last move
 		if (len(old_move) != 2) or (len(new_move) != 2):
-			print old_move
-			print "Length wala"
 			return False 
 		if (type(old_move[0]) is not int) or (type(old_move[1]) is not int) or (type(new_move[0]) is not int) or (type(new_move[1]) is not int):
-			print old_move
-			print "Type wala"
 			return False
 		if (old_move != (-1,-1)) and (old_move[0] < 0 or old_move[0] > 16 or old_move[1] < 0 or old_move[1] > 16):
-			print old_move
-			return "Limit wala"
 			return False
 		cells = self.find_valid_move_cells(old_move)
 		return new_move in cells
@@ -253,19 +243,18 @@ def gameplay(obj1, obj2):				#game simulator
 			break
 		except Exception as e:
 			WINNER = 'P1'
-			MESSAGE = 'INVALID MOVE1'
+			MESSAGE = 'INVALID MOVE'
 			pts1 = 16			
 			break
 		signal.alarm(0)
 		if (game_board.block_status != temp_block_status) or (game_board.board_status != temp_board_status):
 			WINNER = 'P1'
-			print "how"
 			MESSAGE = 'MODIFIED THE BOARD'
 			pts1 = 16
 			break
 		if game_board.update(old_move, p2_move, fl2) == 'UNSUCCESSFUL':
 			WINNER = 'P1'
-			MESSAGE = 'INVALID MOVE2'
+			MESSAGE = 'INVALID MOVE'
 			pts1 = 16
 			break
 
@@ -320,16 +309,15 @@ if __name__ == '__main__':
 	obj2 = ''
 	option = sys.argv[1]	
 	if option == '1':
-		#obj1 = vta.Thuglife()
-		obj1 = atv.Thuglife()
+		obj1 = vta.Thuglife()
 		obj2 = Player52()
 
 	elif option == '2':
-		obj1 = atv.Thuglife()
-		obj2 = Player52()	
+		obj1 = Player52()
+		obj2 = vta.Thuglife()
 	elif option == '3':
-		obj1 = Random_Player()
-		obj2 = Player52()
+		obj1 = Player52()
+		obj2 = Random_Player()
 	else:
 		print 'Invalid option'
 		sys.exit(1)
