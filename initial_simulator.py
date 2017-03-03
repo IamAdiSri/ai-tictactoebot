@@ -4,9 +4,9 @@ import random
 import signal
 import time
 import copy
-import vta
-from team52 import Player52
-
+import vijeth
+from team52_arjun import Player52 as new
+from team52_arjun_copy import Player52 as old
 class TimedOutExc(Exception):
 	pass
 
@@ -195,11 +195,11 @@ def gameplay(obj1, obj2):				#game simulator
 			MESSAGE = 'TIME OUT'
 			pts2 = 16
 			break
-		except Exception as e:
-			WINNER = 'P2'
-			MESSAGE = 'INVALID MOVE'
-			pts2 = 16			
-			break
+		# except Exception as e:
+		# 	WINNER = 'P2'
+		# 	MESSAGE = 'INVALID MOVE1'
+		# 	pts2 = 16			
+		# 	break
 		signal.alarm(0)
 
 		#check if board is not modified and move returned is valid
@@ -210,7 +210,7 @@ def gameplay(obj1, obj2):				#game simulator
 			break
 		if game_board.update(old_move, p1_move, fl1) == 'UNSUCCESSFUL':
 			WINNER = 'P2'
-			MESSAGE = 'INVALID MOVE'
+			MESSAGE = 'INVALID MOVE2'
 			pts2 = 16
 			break
 
@@ -241,11 +241,11 @@ def gameplay(obj1, obj2):				#game simulator
 			MESSAGE = 'TIME OUT'
 			pts1 = 16
 			break
-		except Exception as e:
-			WINNER = 'P1'
-			MESSAGE = 'INVALID MOVE'
-			pts1 = 16			
-			break
+	    # except Exception as e:
+		# 	WINNER = 'P1'
+		# 	MESSAGE = 'INVALID MOVE'
+		# 	pts1 = 16			
+		# 	break
 		signal.alarm(0)
 		if (game_board.block_status != temp_block_status) or (game_board.board_status != temp_board_status):
 			WINNER = 'P1'
@@ -254,6 +254,8 @@ def gameplay(obj1, obj2):				#game simulator
 			break
 		if game_board.update(old_move, p2_move, fl2) == 'UNSUCCESSFUL':
 			WINNER = 'P1'
+			print "x", obj2.send_moves_x()
+			print "o", obj2.send_moves_o()
 			MESSAGE = 'INVALID MOVE'
 			pts1 = 16
 			break
@@ -309,14 +311,14 @@ if __name__ == '__main__':
 	obj2 = ''
 	option = sys.argv[1]	
 	if option == '1':
-		obj1 = vta.Thuglife()
-		obj2 = Player52()
+		obj1 = vijeth.Thuglife()
+		obj2 = new()
 
 	elif option == '2':
-		obj1 = Player52()
-		obj2 = vta.Thuglife()
+		obj1 = new()
+		obj2 = vijeth.Thuglife()
 	elif option == '3':
-		obj1 = Player52()
+		obj1 = new()
 		obj2 = Random_Player()
 	else:
 		print 'Invalid option'

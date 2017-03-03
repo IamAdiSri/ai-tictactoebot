@@ -36,12 +36,13 @@ class Player52():
 					if board.board_status[i][j] == '-':
 						kakka_cells.append((i,j))
 
-		self.update_end_moves(board,kakka_cells, 'x')
-		self.update_end_moves(board,kakka_cells, 'o')
+		self.update_end_moves(board,kakka_cells, 'x', old_move)
+		self.update_end_moves(board,kakka_cells, 'o', old_move)
+
 		print "x", self.end_moves_x
 		print "o", self.end_moves_o
 		cells = self.find_valid_move_cells_optimised(board, old_move, flag, 1)
-
+		print cells
 		cur_time = time.time()
 		count = 0
 		le = len(cells)
@@ -66,7 +67,7 @@ class Player52():
 					if count == rd:
 						bm = cell	
 
-			if cur_time - time.time() > 14:
+			if time.time() - cur_time > 14:
 				if bm == []:
 					if (cells[rd] in self.end_moves_o) or (cell in self.end_moves_x):
 						return cells[rd]
@@ -90,12 +91,17 @@ class Player52():
 						kakka_cells.append((i,j))
 
 		board.update(old_move,bm,flag)
-		self.update_end_moves(board,kakka_cells, 'x')
-		self.update_end_moves(board,kakka_cells, 'o')
+		self.update_end_moves(board,kakka_cells, 'x', old_move)
+		self.update_end_moves(board,kakka_cells, 'o', old_move)
 		self.revert(board,bm,'-')
 		print bm, maxval
 		return bm
-
+	
+	def send_moves_o(self):
+		return self.end_moves_o
+	
+	def send_moves_x(self):
+		return self.end_moves_x
 	def minimax(self, board, depth, isMax, flag, old_move, alpha, beta, cur_time):
 		#to check for the best optimal move
 		k = board.find_terminal_state()
@@ -112,7 +118,7 @@ class Player52():
 		elif k[0]=='NONE' and k[1]=="DRAW":
 			return 0
 
-		if depth >= 4: # run heuristic
+		if depth >= 3: # run heuristic
 			return self.heuristic2(board, depth, isMax, flag, old_move)
 			
 		cells = self.find_valid_move_cells_optimised(board, old_move, flag, isMax)
@@ -124,7 +130,7 @@ class Player52():
 						best = max(best,self.minimax(board, depth+1, (isMax+1)%2, fl, cell, alpha, beta, time.time()))
 						self.revert(board, cell, '-')
 						alpha = max(best,alpha)
-						if	cur_time - time.time() > 14:
+						if	time.time() - cur_time > 14:
 							return best
 						if beta<=alpha:
 							break
@@ -137,7 +143,7 @@ class Player52():
 						best = min(best,self.minimax(board, depth+1, (isMax+1)%2, fl, cell, alpha, beta, time.time()))
 						self.revert(board, cell, '-') 
 						beta = min(best,beta)
-						if cur_time - time.time() > 14:
+						if time.time() - cur_time > 14:
 							return best
 						if beta<=alpha:
 							break
@@ -169,6 +175,7 @@ class Player52():
 	
 	def heuristic2(self, board, depth, isMax, flag, old_move): 
 		#print "hi"
+		#print "heuristic2", old_move
 		alt_flag = 'x'
 		if flag == 'x' and isMax == 1:
 			alt_flag = 'o'
@@ -504,21 +511,21 @@ class Player52():
 			count = 0 
 			for i in range(16):
 				for j in range(4*allowed_block[1], 4*allowed_block[1]+4):
-					if board.board_status[i][j] == '-' and board.block_status[i/4][j/4] == '-' and count  <= 25:
+					if board.board_status[i][j] == '-' and board.block_status[i/4][j/4] == '-' and count  <= 20:
 						count += 1
 						allowed_cells.append((i,j))
 					
 			if allowed_cells == []:
 				for i in range(4*allowed_block[0], 4*allowed_block[0]+4):
 					for j in range(16):
-						if board.board_status[i][j] == '-' and board.block_status[i/4][j/4] == '-' and count <= 25:
+						if board.board_status[i][j] == '-' and board.block_status[i/4][j/4] == '-' and count <= 20:
 							count += 1
 							allowed_cells.append((i,j))
 			if allowed_cells == []:
 				for i in range(16):
 					for j in range(16):
 						if i/4 == j/4:
-							if board.board_status[i][j] == '-' and board.block_status[i/4][j/4] == '-' and count  <= 25:
+							if board.board_status[i][j] == '-' and board.block_status[i/4][j/4] == '-' and count  <= 20:
 								count += 1
 								allowed_cells.append((i,j))
 			
@@ -526,7 +533,7 @@ class Player52():
 				for i in range(16):
 					for j in range(16):
 						if i/4 + j/4 == 3:
-							if board.board_status[i][j] == '-' and board.block_status[i/4][j/4] == '-' and count  <= 25:
+							if board.board_status[i][j] == '-' and board.block_status[i/4][j/4] == '-' and count  <= 20:
 								count += 1
 								allowed_cells.append((i,j))
 								
@@ -534,7 +541,7 @@ class Player52():
 			
 			for i in range(16):
 				for j in range(16):
-					if board.board_status[i][j] == '-' and board.block_status[i/4][j/4] == '-' and count <=  25:
+					if board.board_status[i][j] == '-' and board.block_status[i/4][j/4] == '-' and count <=  20:
 						count+=1
 						allowed_cells.append((i,j))
 
@@ -563,20 +570,21 @@ class Player52():
 					best_allowed_moves.append(cell)
 
 		if best_allowed_moves != []:
+			#for cells in 
 			#print best_allowed_moves
 			return best_allowed_moves
 		return allowed_cells	
 
-	def update_end_moves(self, board, allowed_cells, flag):
+	def update_end_moves(self, board, allowed_cells, flag, old_move):
 		if flag == 'o':
 			end_moves = self.end_moves_o
 		else:
 			end_moves = self.end_moves_x
 		if end_moves != []:
 			for cell in end_moves:
-				if board.board_status[cell[0]][cell[1]] != '-':
+				if board.board_status[cell[0]][cell[1]] != '-' or board.block_status[cell[0]/4][cell[1]/4] != '-':
 					end_moves.remove(cell)
-		
+		#print "update_end_moves", old_move
 		for cell in allowed_cells:
 			if cell in end_moves:
 				continue
@@ -809,7 +817,7 @@ def gameplay(obj1, obj2):				#game simulator
 			break
 		except Exception as e:
 			WINNER = 'P2'
-			MESSAGE = 'INVALID MOVE'
+			MESSAGE = 'INVALID MOVE1'
 			pts2 = 16			
 			break
 		signal.alarm(0)
@@ -822,7 +830,7 @@ def gameplay(obj1, obj2):				#game simulator
 			break
 		if game_board.update(old_move, p1_move, fl1) == 'UNSUCCESSFUL':
 			WINNER = 'P2'
-			MESSAGE = 'INVALID MOVE'
+			MESSAGE = 'INVALID MOVE2'
 			pts2 = 16
 			break
 
