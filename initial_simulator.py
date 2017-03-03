@@ -6,7 +6,7 @@ import time
 import copy
 import vijeth
 from team52_arjun import Player52 as new
-from team52_arjun_copy import Player52 as old
+from team52 import Player52 as old
 class TimedOutExc(Exception):
 	pass
 
@@ -311,12 +311,12 @@ if __name__ == '__main__':
 	obj2 = ''
 	option = sys.argv[1]	
 	if option == '1':
-		obj1 = vijeth.Thuglife()
+		obj1 = old()
 		obj2 = new()
 
 	elif option == '2':
 		obj1 = new()
-		obj2 = vijeth.Thuglife()
+		obj2 = old()
 	elif option == '3':
 		obj1 = new()
 		obj2 = Random_Player()
